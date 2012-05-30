@@ -21,9 +21,9 @@
            </properties>
 
     <modules>
+        <module>conf</module>
         <module>app</module>
         <module>server</module>
-        <module>conf</module>
     </modules>
 
 
@@ -139,19 +139,41 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <version>2.1.1</version>
+                        <version>2.2</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.3.2</version>
+                        <version>2.5</version>
                         <configuration>
                             <source>${java.version}</source>
                             <target>${java.version}</target>
                             <encoding>${project.build.sourceEncoding}</encoding>
                         </configuration>
                     </plugin>
+                    <plugin>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.6</version>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
 
     </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>devel</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <deployment.env>devel</deployment.env>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
+
+
 </project>

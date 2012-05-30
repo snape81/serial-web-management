@@ -1,4 +1,4 @@
-package com.nexse.serial.server.comlink;
+package com.nexse.serial.server.rxtx;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;

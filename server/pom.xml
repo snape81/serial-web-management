@@ -13,21 +13,96 @@
     <groupId>com.nexse.tools</groupId>
     <artifactId>serial-web-management-server</artifactId>
     <version>1.0</version>
+    <name>Serial Port Web Management- Server Websocket</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.rxtx</groupId>
-            <artifactId>rxtx</artifactId>
+          <groupId>org.rxtx</groupId>
+          <artifactId>rxtx</artifactId>
         </dependency>
 
         <dependency>
-                       <groupId>io.netty</groupId>
-                       <artifactId>netty</artifactId>
+          <groupId>io.netty</groupId>
+          <artifactId>netty</artifactId>
         </dependency>
         <dependency>
-                             <groupId>org.atmosphere</groupId>
-                             <artifactId>nettosphere</artifactId>
+          <groupId>org.atmosphere</groupId>
+          <artifactId>nettosphere</artifactId>
+        </dependency>
+
+
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+           <groupId>log4j</groupId>
+           <artifactId>log4j</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                     <artifactId>maven-remote-resources-plugin</artifactId>
+                            <version>1.2</version>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>process</goal>
+                                    </goals>
+                                    <configuration>
+                                        <resourceBundles>
+                                            <resourceBundle>
+                                                com.nexse.tools.conf.serial-web-management.conf.${deployment.env}:server-config:${project.version}
+                                            </resourceBundle>
+                                        </resourceBundles>
+
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.nexse.serial.MainServer</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                     <execution>
+                       <id>make-my-jar-with-dependencies</id>
+                       <phase>package</phase>
+                       <goals>
+                         <goal>single</goal>
+                       </goals>
+                     </execution>
+                   </executions>
+
+            </plugin>
+        </plugins>
+    </build>
+
     
 </project>
