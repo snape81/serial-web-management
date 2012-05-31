@@ -4,7 +4,7 @@
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d %5p | %t | %-30logger{30} | %m %n</pattern>
+            <pattern>%d %5p | %t | %-50logger{50} | %m %n</pattern>
         </encoder>
     </appender>
 

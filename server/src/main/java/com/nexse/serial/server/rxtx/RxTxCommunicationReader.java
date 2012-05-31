@@ -1,5 +1,6 @@
 package com.nexse.serial.server.rxtx;
 
+import com.nexse.serial.conf.ScannerCommands;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -117,7 +118,7 @@ public class RxTxCommunicationReader {
         public void putInBadTray() {
             try {
                 System.out.println(" requested to put in bad tray ..... ");
-                           this.out.write(83);
+                           this.out.write(ScannerCommands.getIntValueOfCommand(ScannerCommands.COMMAND_G));
                 System.out.println("send to scanner int 53 (hex) --> 83 DEC");
                        } catch (IOException e) {
                            e.printStackTrace();
