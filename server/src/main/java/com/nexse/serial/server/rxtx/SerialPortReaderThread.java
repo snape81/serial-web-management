@@ -1,5 +1,7 @@
 package com.nexse.serial.server.rxtx;
 
+import com.nexse.serial.conf.ScannerCommands;
+import com.nexse.serial.server.exchange.EventStringExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,10 +12,14 @@ import java.io.InputStream;
 public class SerialPortReaderThread implements Runnable {
     static final Logger logger = LoggerFactory.getLogger(SerialPortReaderThread.class);
 
+    String portId;
     InputStream in;
+    EventStringExchange dataExchange;
 
-    public SerialPortReaderThread(InputStream in) {
+    public SerialPortReaderThread(String portId, InputStream in, EventStringExchange dataExchange) {
+        this.portId = portId;
         this.in = in;
+        this.dataExchange = dataExchange;
     }
 
     public void run() {
@@ -23,10 +29,19 @@ public class SerialPortReaderThread implements Runnable {
         try {
             while ((len = this.in.read(buffer)) > -1) {
                 sb.append(new String(buffer, 0, len));
+                for (int i = 0; i < len; i++) {
+                        if ((buffer[i] == ScannerCommands.CR_INT_VALUE)) {
+                           logger.debug("Ultimata lettura schedina " +sb.toString());
+                            dataExchange.put(sb.toString());
+                            sb = new StringBuilder();
+                            break;
+                        }
+                }
+
             }
-            logger.debug("Stringa letta dallo scannner {}", sb.toString());
+
         } catch (IOException e) {
-            logger.error("Errore nella lettura dello stream dalla seriale ", e);
+            logger.error("Error in writing command on port " + portId,e);
         }
     }
 }

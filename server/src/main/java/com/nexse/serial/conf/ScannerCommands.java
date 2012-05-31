@@ -17,6 +17,9 @@ public class ScannerCommands {
     //Resend last read data
     public static final String COMMAND_W = "57";
 
+    //ascii CR int value
+    public static final int CR_INT_VALUE = 13;
+
 
     public static int getIntValueOfCommand(String command) {
         return Integer.parseInt(command, 16);

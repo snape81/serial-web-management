@@ -27,7 +27,7 @@ public class SerialPortWriterThread implements Runnable {
                 this.out.write(commandToSend);
             }
         } catch (IOException e) {
-           logger.error("Error in writing command on port ");
+           logger.error("Error in writing command on port " + portId,e);
         }
     }
 }
