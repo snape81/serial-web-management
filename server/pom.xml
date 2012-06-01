@@ -25,10 +25,7 @@
           <groupId>io.netty</groupId>
           <artifactId>netty</artifactId>
         </dependency>
-        <dependency>
-          <groupId>org.atmosphere</groupId>
-          <artifactId>nettosphere</artifactId>
-        </dependency>
+
 
 
         <dependency>
@@ -55,7 +52,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
         </dependency>
+
+
     </dependencies>
+
+
 
     <build>
         <plugins>

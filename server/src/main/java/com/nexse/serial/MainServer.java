@@ -1,16 +1,18 @@
 package com.nexse.serial;
 
-import com.nexse.serial.conf.ScannerCommands;
+import com.nexse.serial.server.conf.ScannerCommands;
 import com.nexse.serial.server.MarkSenseCard;
 import com.nexse.serial.server.ScannerManager;
 import com.nexse.serial.server.exchange.EventIntExchange;
+import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
+import com.nexse.serial.server.websocket.ScannerWebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
-import static com.nexse.serial.conf.ConfigConstants.*;
+import static com.nexse.serial.server.conf.ConfigConstants.*;
 
 public class MainServer {
     static final Logger logger = LoggerFactory.getLogger(MainServer.class);
@@ -21,6 +23,7 @@ public class MainServer {
 
         EventIntExchange scannerCommand = new EventIntExchange();
         EventStringExchange scannerData = new EventStringExchange();
+        EventMarkSenseExchange scannerDataToWebSocket = new EventMarkSenseExchange();
         ScannerManager scannerManager = null;
 
         // LETTURA DELLE PROPERTIES DA FILE
@@ -51,20 +54,27 @@ public class MainServer {
             logger.debug(" connection to scanner opened ");
 
             //logger.debug("SEND L Command ");
-           // scannerCommand.put(ScannerCommands.getIntValueOfCommand(ScannerCommands.COMMAND_L));
+            scannerCommand.put(ScannerCommands.getIntValueOfCommand(ScannerCommands.COMMAND_L));
 
             // CREAZIONE PIPELINE DI RICEZIONE DATI
             logger.debug(" start open connection from scanner  ....  ");
             scannerManager.startConnectionFromScanner(scannerData);
             logger.debug(" connection from scanner opened ");
 
+            //todo websocket port in prop file
+            ScannerWebSocketServer swss = new ScannerWebSocketServer(8080,scannerDataToWebSocket);
+            swss.run();
+
+
             while (true) {
                 // ciclo infinito di attesa di ricezione dati
                 //todo websocket
                 String mess = scannerData.get();
-                logger.debug(" SCANNER READER ha letto " + mess);
+                logger.debug(" SCANNER READER ha letto {}",mess);
                 MarkSenseCard msc = validaLetturaECreaSchedina(mess);
-                logger.debug(" msc generated " + msc);
+                logger.debug(" msc validata {} la spedisco alla websocket " , msc );
+                scannerDataToWebSocket.put(msc);
+
                 logger.debug(" Ejecting in bad tray .... ");
                 scannerCommand.put(ScannerCommands.getIntValueOfCommand(ScannerCommands.COMMAND_S));
                 logger.debug(" ready for next reading !");
@@ -89,5 +99,6 @@ public class MainServer {
            msc.setRawString(rawDataFromScanner);
            return msc;
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.nexse.serial.conf;
+package com.nexse.serial.server.conf;
 
 public class ScannerCommands {
 

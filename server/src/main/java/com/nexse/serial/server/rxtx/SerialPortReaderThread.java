@@ -1,6 +1,6 @@
 package com.nexse.serial.server.rxtx;
 
-import com.nexse.serial.conf.ScannerCommands;
+import com.nexse.serial.server.conf.ScannerCommands;
 import com.nexse.serial.server.exchange.EventStringExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
