@@ -11,7 +11,6 @@ public class EventIntExchange {
                 } finally {
                 }
             }
-            System.out.println("Producing " + readed + " ...");
             buffer = readed;
             notify();
         }
@@ -28,7 +27,6 @@ public class EventIntExchange {
 
             Integer ret = buffer;
             buffer = null;
-            System.out.println("Consuming " +  ret  + " ...");
             notify();
             return ret;
         }

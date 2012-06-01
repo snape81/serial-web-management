@@ -28,20 +28,22 @@ public class SerialPortReaderThread implements Runnable {
         StringBuilder sb = new StringBuilder();
         try {
             while ((len = this.in.read(buffer)) > -1) {
-                sb.append(new String(buffer, 0, len));
                 for (int i = 0; i < len; i++) {
-                        if ((buffer[i] == ScannerCommands.CR_INT_VALUE)) {
-                           logger.debug("Ultimata lettura schedina " +sb.toString());
-                            dataExchange.put(sb.toString());
-                            sb = new StringBuilder();
-                            break;
-                        }
+
+                    if (buffer[i] == ScannerCommands.CR_INT_VALUE) {
+                        String raw = sb.toString();
+                        dataExchange.put(raw);
+                        sb = new StringBuilder();
+                        break;
+                    } else {
+                        sb.append((char) buffer[i]);
+                    }
                 }
 
             }
 
         } catch (IOException e) {
-            logger.error("Error in writing command on port " + portId,e);
+            logger.error("Error in writing command on port " + portId, e);
         }
     }
 }
