@@ -1,4 +1,4 @@
-package com.nexse.serial.conf;
+package com.nexse.serial.server.conf;
 
 public class ConfigConstants {
     public static final String SCANNER_PORT_DEVICE_ID = "scanner.port.device.id";
