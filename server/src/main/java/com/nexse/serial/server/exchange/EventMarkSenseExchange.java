@@ -17,14 +17,11 @@ public class EventMarkSenseExchange {
         notify();
     }
 
-    public synchronized MarkSenseCard get() {
+    public synchronized MarkSenseCard get() throws InterruptedException {
 
         if (buffer == null) {
-            try {
                 wait();
-            } catch (InterruptedException e) {
-            } finally {
-            }
+
         }
 
         MarkSenseCard ret = buffer;

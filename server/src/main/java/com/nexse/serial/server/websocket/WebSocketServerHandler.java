@@ -47,6 +47,8 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
 
     private WebSocketServerHandshaker handshaker;
 
+    private Thread writingThread;
+
     public WebSocketServerHandler(EventMarkSenseExchange dataRead) {
         this.dataRead = dataRead;
 
@@ -100,16 +102,7 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
         }
     }
 
-    private final  ChannelFutureListener HANDSHAKE_SCANNER_LISTENER = new ChannelFutureListener() {
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if (!future.isSuccess()) {
-                    Channels.fireExceptionCaught(future.getChannel(), future.getCause());
-                } else {
-                    logger.debug("STARTING WRITING THREAD ON CHANNEL {}",future.getChannel());
-                    new Thread(new WaitAndWriteScannerString(future.getChannel())).start();
-                }
-            }
-        };
+    private final  ChannelFutureListener HANDSHAKE_SCANNER_LISTENER = new MyChannelFutureListener(this);
 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 
@@ -162,23 +155,74 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
 
         private Channel chl;
 
+
         WaitAndWriteScannerString(Channel chl) {
             this.chl = chl;
         }
 
+
         @Override
         public void run() {
-            while (true) {
-                // ciclo infinito di attesa di ricezione dati
-                MarkSenseCard mess = dataRead.get();
-                logger.debug(" Il server websocket ha letto la mark sense card {}", mess);
-                if (chl != null && chl.isOpen()) {
-                    chl.write(new TextWebSocketFrame(mess.getRawString()));
+                while (true) {
+                    try {
 
-                } else {
-                    logger.error(" Context e' null il messaggio " + mess + " e' stato scartato");
+                        // ciclo infinito di attesa di ricezione dati
+
+
+                        MarkSenseCard mess = dataRead.get();
+                        logger.debug(" Il server websocket ha letto la mark sense card {}", mess);
+                        if (chl != null && chl.isOpen()) {
+                            chl.write(new TextWebSocketFrame(mess.getRawString()));
+
+                        } else {
+                            logger.error(" Context e' null il messaggio " + mess + " e' stato scartato");
+                        }
+                    } catch (InterruptedException e) {
+                        logger.debug("INTERRUPTED!!!! ");
+                        return;
+                    }
                 }
-            }
+
         }
+
+
+    }
+
+    @Override
+    public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+        logger.debug("DISCONNECTED {} ",this.toString());
+        this.writingThread.interrupt();
+
+        logger.debug("Thread to kill {}",this.writingThread );
+        super.channelDisconnected(ctx, e);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+
+
+    private class MyChannelFutureListener implements ChannelFutureListener {
+
+        private WebSocketServerHandler handler;
+
+        private MyChannelFutureListener(WebSocketServerHandler handler) {
+            this.handler = handler;
+        }
+
+
+
+        @Override
+        public void operationComplete(ChannelFuture future) throws Exception {
+                        if (!future.isSuccess()) {
+                            Channels.fireExceptionCaught(future.getChannel(), future.getCause());
+                        } else {
+                            logger.debug("CLASS {} STARTING WRITING THREAD ON CHANNEL {}",this.toString(),future.getChannel());
+                             Thread myNewWritingThread = new Thread(new WaitAndWriteScannerString(future.getChannel()));
+                            handler.setWritingThread(myNewWritingThread);
+                            myNewWritingThread.start();
+                        }
+                    }
+    }
+
+    public void setWritingThread(Thread writingThread) {
+        this.writingThread = writingThread;
     }
 }
