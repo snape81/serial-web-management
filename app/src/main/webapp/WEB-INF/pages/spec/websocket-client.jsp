@@ -15,8 +15,18 @@ if (!window.WebSocket) {
   window.WebSocket = window.MozWebSocket;
 }
 if (window.WebSocket) {
-  socket = new WebSocket("ws://localhost:8080/websocket");
-  socket.onmessage = function(event) { var ta = document.getElementById('responseText'); ta.value = ta.value + '\n' + event.data };
+  socket = new WebSocket("ws://10.1.0.83:8080/websocket");
+  socket.onmessage = function(event) { var ta = document.getElementById('responseText');
+      var lr = document.getElementById('lastRead');
+     // alert();
+      if (event.data && event.data.indexOf("PRINTED") <0) {
+          lr.value = event.data;
+          if (document.getElementById('autoprint').checked == true) {
+          
+              send(event.data);
+          }
+      }
+      ta.value = ta.value + '\n' + event.data };
   socket.onopen = function(event) { var ta = document.getElementById('responseText'); ta.value = "Web Socket opened!"; };
   socket.onclose = function(event) { var ta = document.getElementById('responseText'); ta.value = ta.value + "Web Socket closed"; };
 } else {
@@ -33,9 +43,12 @@ function send(message) {
 }
 </script>
 <form onsubmit="return false;">
-<input type="text" name="message" value="Hello, World!"/><input type="button" value="Send Web Socket Data" onclick="send(this.form.message.value)" />
+<h3>Last Data Read </h3>
+<textarea readonly="readonly" id="lastRead" style="width: 600px; height:50px;" name="message"></textarea><br/><br/>
+<input type="button" value="PRINT" onclick="send(this.form.message.value)" />
+Automatic print: <input type="checkbox" name="autoprint" id="autoprint"/>
 <h3>Log AREA</h3>
-<textarea id="responseText" style="width: 500px; height:300px;"></textarea>
+<textarea readonly="readonly" id="responseText" style="width: 500px; height:300px;"></textarea>
 </form>
 </body>
 </html>
