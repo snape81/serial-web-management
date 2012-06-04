@@ -1,7 +1,6 @@
 package com.nexse.serial;
 
-import com.nexse.serial.server.conf.ScannerCommands;
-import com.nexse.serial.server.MarkSenseCard;
+import com.nexse.serial.server.PrinterManager;
 import com.nexse.serial.server.ScannerManager;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
@@ -22,9 +21,15 @@ public class MainServer {
         logger.info(" ------------- SERIAL PORT SERVER START -------------------- ");
 
         EventIntExchange scannerCommand = new EventIntExchange();
+        EventIntExchange printerData = new EventIntExchange();
+
         EventStringExchange scannerData = new EventStringExchange();
+        EventStringExchange printerDataFromWebSocket = new EventStringExchange();
+
         EventMarkSenseExchange scannerDataToWebSocket = new EventMarkSenseExchange();
+
         ScannerManager scannerManager = null;
+        PrinterManager printerManager = null;
 
         // LETTURA DELLE PROPERTIES DA FILE
         logger.debug(" starting reading properties from file  ... " + PORTS_PROPERTIES_FILE_NAME);
@@ -40,48 +45,50 @@ public class MainServer {
 
         // CREAZIONE DELLA CLASSE GESTORE DELLO SCANNER
         try {
-            logger.debug(" start instantiate rxtx scanner utility ");
+            logger.debug(" start instantiate rxtx scanner utility ---> SCANNER ");
             scannerManager = new ScannerManager(portProperties.getProperty(SCANNER_PORT_DEVICE_ID),
-                    new Integer((String) portProperties.get(SCANNER_PORT_BAUD_RATE)),
-                    new Integer((String) portProperties.get(SCANNER_PORT_DATA_BIT)),
-                    new Integer((String) portProperties.get(SCANNER_PORT_STOP_BIT)),
-                    new Integer((String) portProperties.get(SCANNER_PORT_PARITY)));
+                    new Integer(portProperties.getProperty(SCANNER_PORT_BAUD_RATE)),
+                    new Integer(portProperties.getProperty(SCANNER_PORT_DATA_BIT)),
+                    new Integer(portProperties.getProperty(SCANNER_PORT_STOP_BIT)),
+                    new Integer(portProperties.getProperty(SCANNER_PORT_PARITY)));
+            logger.debug("  instantiate rxtx scanner utility completed ---> SCANNER");
 
-            logger.debug("  instantiate rxtx scanner utility completed ");
-            // CREAZIONE PIPELINE DI INVIO COMANDI E INIZIALIZZAZIONE ALLA LETTURA "L"
+            logger.debug(" start instantiate rxtx printer utility ---> PRINTER");
+            printerManager = new PrinterManager(portProperties.getProperty(PRINTER_PORT_DEVICE_ID),
+                    new Integer((String) portProperties.get(PRINTER_PORT_BAUD_RATE)),
+                    new Integer((String) portProperties.get(PRINTER_PORT_DATA_BIT)),
+                    new Integer((String) portProperties.get(PRINTER_PORT_STOP_BIT)),
+                    new Integer((String) portProperties.get(PRINTER_PORT_PARITY)));
+            logger.debug("  instantiate rxtx scanner utility completed ---> PRINTER");
+
+
             logger.debug(" start open connection to scanner  ....  ");
             scannerManager.startConnectionToScanner(scannerCommand);
             logger.debug(" connection to scanner opened ");
 
-            //logger.debug("SEND L Command ");
-            scannerCommand.put(ScannerCommands.getIntValueOfCommand(ScannerCommands.COMMAND_L));
-
-            // CREAZIONE PIPELINE DI RICEZIONE DATI
             logger.debug(" start open connection from scanner  ....  ");
             scannerManager.startConnectionFromScanner(scannerData);
             logger.debug(" connection from scanner opened ");
+            logger.debug("init bitmask fashion reading ... ");
+            scannerManager.initScannerWithBitmaskReading(scannerCommand);
+            logger.debug(" ... reding initialized");
 
-            //todo websocket port in prop file
-            ScannerWebSocketServer swss = new ScannerWebSocketServer(8080,scannerDataToWebSocket);
+            ScannerWebSocketServer swss = new ScannerWebSocketServer(new Integer( portProperties.getProperty(WEBSOCKET_PORT)),scannerDataToWebSocket,printerDataFromWebSocket);
             swss.run();
 
-
-            while (true) {
-                // ciclo infinito di attesa di ricezione dati
-                //todo websocket
-                String mess = scannerData.get();
-                logger.debug(" SCANNER READER ha letto {}",mess);
-                MarkSenseCard msc = validaLetturaECreaSchedina(mess);
-                logger.debug(" msc validata {} la spedisco alla websocket " , msc );
-                scannerDataToWebSocket.put(msc);
-
-                logger.debug(" Ejecting in bad tray .... ");
-                scannerCommand.put(ScannerCommands.getIntValueOfCommand(ScannerCommands.COMMAND_S));
-                logger.debug(" ready for next reading !");
+            logger.debug("start loop scanner reading  .... ");
+            scannerManager.startReaderLoopFromScanner(scannerCommand,scannerData,scannerDataToWebSocket);
+            logger.debug("loop scanner reading started!");
 
 
+            logger.debug(" start open connection to printer  ....  ");
+            printerManager.startConnectionToPrinter(printerData);
+            logger.debug(" connection to scanner printer ");
 
-            }
+            logger.debug("start loop printer  .... ");
+            printerManager.startPrinterLoopFromWebsocket(printerData,printerDataFromWebSocket);
+                        logger.debug("loop printer started!");
+
 
 
         } catch (Exception e) {
@@ -92,13 +99,7 @@ public class MainServer {
 
     }
 
-    private static MarkSenseCard validaLetturaECreaSchedina(String rawDataFromScanner) {
-           MarkSenseCard msc = new MarkSenseCard();
 
-
-           msc.setRawString(rawDataFromScanner);
-           return msc;
-    }
 
 
 }

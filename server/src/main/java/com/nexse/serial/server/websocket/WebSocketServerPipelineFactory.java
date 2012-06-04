@@ -16,6 +16,7 @@
 package com.nexse.serial.server.websocket;
 
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
+import com.nexse.serial.server.exchange.EventStringExchange;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
@@ -28,9 +29,11 @@ import static org.jboss.netty.channel.Channels.pipeline;
  */
 public class WebSocketServerPipelineFactory implements ChannelPipelineFactory {
     private EventMarkSenseExchange dataRead;
+    private EventStringExchange dataToPrint;
 
-    public WebSocketServerPipelineFactory(EventMarkSenseExchange dataRead) {
+    public WebSocketServerPipelineFactory(EventMarkSenseExchange dataRead, EventStringExchange dataToPrint) {
         this.dataRead = dataRead;
+        this.dataToPrint = dataToPrint;
     }
 
     public ChannelPipeline getPipeline() throws Exception {
@@ -39,7 +42,7 @@ public class WebSocketServerPipelineFactory implements ChannelPipelineFactory {
         pipeline.addLast("decoder", new HttpRequestDecoder());
         pipeline.addLast("aggregator", new HttpChunkAggregator(65536));
         pipeline.addLast("encoder", new HttpResponseEncoder());
-        pipeline.addLast("handler", new WebSocketServerHandler(dataRead));
+        pipeline.addLast("handler", new WebSocketServerHandler(dataRead,dataToPrint));
         return pipeline;
     }
 

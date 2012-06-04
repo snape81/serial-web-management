@@ -17,6 +17,7 @@ package com.nexse.serial.server.websocket;
 
 import com.nexse.serial.server.MarkSenseCard;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
+import com.nexse.serial.server.exchange.EventStringExchange;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
@@ -42,6 +43,7 @@ import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
     static final Logger logger = LoggerFactory.getLogger(WebSocketServerHandler.class);
     private EventMarkSenseExchange dataRead;
+    private EventStringExchange dataToPrint;
 
     private static final String WEBSOCKET_PATH = "/websocket";
 
@@ -49,8 +51,9 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
 
     private Thread writingThread;
 
-    public WebSocketServerHandler(EventMarkSenseExchange dataRead) {
+    public WebSocketServerHandler(EventMarkSenseExchange dataRead, EventStringExchange dataToPrint) {
         this.dataRead = dataRead;
+        this.dataToPrint = dataToPrint;
 
     }
 
@@ -120,7 +123,8 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
         // Send the uppercase string back.
         String request = ((TextWebSocketFrame) frame).getText();
         logger.debug("Channel {} received {}", ctx.getChannel().getId(), request);
-        ctx.getChannel().write(new TextWebSocketFrame(request.toUpperCase()));
+        dataToPrint.put(request);
+        ctx.getChannel().write(new TextWebSocketFrame("PRINTED --> " + request));
     }
 
 
@@ -172,8 +176,11 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
                         MarkSenseCard mess = dataRead.get();
                         logger.debug(" Il server websocket ha letto la mark sense card {}", mess);
                         if (chl != null && chl.isOpen()) {
-                            chl.write(new TextWebSocketFrame(mess.getRawString()));
-
+                            if (mess.isEmpty()) {
+                                chl.write(new TextWebSocketFrame("Schedina Vuota"));
+                            } else {
+                                chl.write(new TextWebSocketFrame(mess.getRawString()));
+                            }
                         } else {
                             logger.error(" Context e' null il messaggio " + mess + " e' stato scartato");
                         }

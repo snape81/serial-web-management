@@ -1,6 +1,8 @@
 package com.nexse.serial.server;
 
+import com.nexse.serial.server.conf.ScannerCommands;
 import com.nexse.serial.server.exchange.EventIntExchange;
+import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
 import com.nexse.serial.server.rxtx.SerialPortReaderThread;
 import com.nexse.serial.server.rxtx.SerialPortWriterThread;
@@ -39,18 +41,73 @@ public class ScannerManager {
     }
 
 
-
     public void startConnectionToScanner(EventIntExchange commandToSend) throws IOException {
         logger.debug(" Starting writing thread .... ");
-        new Thread(new SerialPortWriterThread(scannerDevId,scannerSerialPort.getOutputStream(),commandToSend)).start();
+        new Thread(new SerialPortWriterThread(scannerDevId, scannerSerialPort.getOutputStream(), commandToSend)).start();
         logger.debug(" Writing thread started .... ");
     }
 
     public void startConnectionFromScanner(EventStringExchange dataToRead) throws IOException {
         logger.debug(" Starting reading thread .... ");
-        new Thread(new SerialPortReaderThread(scannerDevId,scannerSerialPort.getInputStream(),dataToRead)).start();
-                logger.debug(" Reading thread started .... ");
+        new Thread(new SerialPortReaderThread(scannerDevId, scannerSerialPort.getInputStream(), dataToRead)).start();
+        logger.debug(" Reading thread started .... ");
     }
 
 
+    public void startReaderLoopFromScanner(EventIntExchange scannerCommand, EventStringExchange scannerData, EventMarkSenseExchange scannerDataToWebSocket) {
+           new Thread(new MainScannerLoop(scannerCommand,scannerData,scannerDataToWebSocket)).start();
+
+    }
+
+    private MarkSenseCard validaLetturaECreaSchedina(String rawDataFromScanner) {
+        MarkSenseCard msc = new MarkSenseCard();
+
+
+        msc.setRawString(rawDataFromScanner);
+        msc.setRow(rawDataFromScanner.length() / MarkSenseCard.ONE_ROW_CHARS_NUMBER);
+
+        return msc;
+    }
+
+    public void initScannerWithBitmaskReading(EventIntExchange command) {
+        command.put(ScannerCommands.READ_BITMASK_FASHION_L);
+    }
+
+    private  class MainScannerLoop implements Runnable {
+
+        private EventIntExchange scannerCommand;
+        private EventStringExchange scannerData;
+        private EventMarkSenseExchange scannerDataToWebSocket;
+
+        private MainScannerLoop(EventIntExchange scannerCommand, EventStringExchange scannerData, EventMarkSenseExchange scannerDataToWebSocket) {
+            this.scannerCommand = scannerCommand;
+            this.scannerData = scannerData;
+            this.scannerDataToWebSocket = scannerDataToWebSocket;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                        // ciclo infinito di attesa di ricezione dati
+                        String mess = scannerData.get();
+                        logger.debug(" SCANNER READER ha letto {}", mess);
+                        MarkSenseCard msc = validaLetturaECreaSchedina(mess);
+                        scannerDataToWebSocket.put(msc);
+
+                        if (msc.isEmpty()) {
+                            logger.debug(" msc vuota ", msc.getRow());
+                            logger.debug(" Ejecting in bad tray .... ");
+                            scannerCommand.put(ScannerCommands.EJECT_IN_BAD_TRAY_S);
+                        } else {
+                            logger.debug(" msc validata {} la spedisco alla websocket ", msc);
+                            logger.debug(" Ejecting in good tray .... ");
+                            scannerCommand.put(ScannerCommands.EJECT_IN_GOOD_TRAY_G);
+                        }
+
+                        logger.debug(" ready for next reading !");
+
+
+                    }
+    }
+    }
 }

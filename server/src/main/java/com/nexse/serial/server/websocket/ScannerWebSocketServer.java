@@ -16,6 +16,7 @@
 package com.nexse.serial.server.websocket;
 
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
+import com.nexse.serial.server.exchange.EventStringExchange;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.slf4j.Logger;
@@ -48,10 +49,12 @@ public class ScannerWebSocketServer {
     
     private final int port;
     private EventMarkSenseExchange dataReaded;
-    
-    public ScannerWebSocketServer(int port, EventMarkSenseExchange dataReaded) {
+    private EventStringExchange dataToPrint;
+
+    public ScannerWebSocketServer(int port, EventMarkSenseExchange dataReaded, EventStringExchange dataToPrint) {
         this.dataReaded = dataReaded;
         this.port = port;
+        this.dataToPrint = dataToPrint;
     }
     
     public void run() {
@@ -59,7 +62,7 @@ public class ScannerWebSocketServer {
         ServerBootstrap bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool()));
 
         // Set up the event pipeline factory.
-        bootstrap.setPipelineFactory(new WebSocketServerPipelineFactory(dataReaded));
+        bootstrap.setPipelineFactory(new WebSocketServerPipelineFactory(dataReaded,dataToPrint));
 
         // Bind and start to accept incoming connections.
         bootstrap.bind(new InetSocketAddress(port));
