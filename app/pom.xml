@@ -75,6 +75,15 @@
                         <artifactId>logback-core</artifactId>
                     </dependency>
 
+              <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>jsp-api</artifactId>
+                </dependency>
+
     </dependencies>
 
 </project>
