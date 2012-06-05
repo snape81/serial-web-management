@@ -47,13 +47,17 @@ public class PrinterManager {
     }
 
 
+
     public synchronized void printAWebsocketMessage(String toWrite) {
+        centerJustification();
         addLogo();
+        leftJustification();
+
 
         for (byte b : toWrite.getBytes()) {
-            logger.debug("Ready to print char {} --> from byte {} ", (char) b, (int) b);
             printerCommand.put((int) b);
         }
+
         sendPrintAndCut();
 
     }
@@ -72,6 +76,23 @@ public class PrinterManager {
             printerCommand.put((int)b);
         }
     }
+
+    private void centerJustification() {
+        for (byte b : new byte[]{0x1B, 0x61, 0x1}) {
+            printerCommand.put((int)b);
+        }
+    }
+
+    private void feedNLines(int lineNumber) {
+       printerCommand.put(0x14);
+       printerCommand.put(lineNumber);
+    }
+
+    private void leftJustification() {
+            for (byte b : new byte[]{0x1B, 0x61, 0x0}) {
+                printerCommand.put((int)b);
+            }
+        }
 
     public void startPrinterLoopFromWebsocket(EventStringExchange dataToPrintFromWebsocket) {
          new Thread(new MainPrinterLoop(dataToPrintFromWebsocket)).start();
