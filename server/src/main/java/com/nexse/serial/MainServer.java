@@ -58,7 +58,7 @@ public class MainServer {
                     new Integer((String) portProperties.get(PRINTER_PORT_BAUD_RATE)),
                     new Integer((String) portProperties.get(PRINTER_PORT_DATA_BIT)),
                     new Integer((String) portProperties.get(PRINTER_PORT_STOP_BIT)),
-                    new Integer((String) portProperties.get(PRINTER_PORT_PARITY)));
+                    new Integer((String) portProperties.get(PRINTER_PORT_PARITY)),printerData);
             logger.debug("  instantiate rxtx scanner utility completed ---> PRINTER");
 
 
@@ -86,7 +86,7 @@ public class MainServer {
             logger.debug(" connection to scanner printer ");
 
             logger.debug("start loop printer  .... ");
-            printerManager.startPrinterLoopFromWebsocket(printerData,printerDataFromWebSocket);
+            printerManager.startPrinterLoopFromWebsocket(printerDataFromWebSocket);
                         logger.debug("loop printer started!");
 
 

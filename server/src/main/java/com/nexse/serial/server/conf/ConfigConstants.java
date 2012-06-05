@@ -14,5 +14,6 @@ public class ConfigConstants {
        public static final String PRINTER_PORT_PARITY    = "printer.port.parity";
 
     public static final String PORTS_PROPERTIES_FILE_NAME = "ports.properties";
+    public static final String NEXSE_LOGO_FILE_NAME = "nexsebn.bmp";
     public static final String WEBSOCKET_PORT = "websocket.port";
 }

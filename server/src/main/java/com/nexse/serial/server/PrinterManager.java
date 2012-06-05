@@ -17,10 +17,11 @@ public class PrinterManager {
 
     private SerialPort printerSerialPort;
     private String printerDevId;
+    private EventIntExchange printerCommand;
 
-    public PrinterManager(String printerDevId, int printerPortBaud, int printerDataBit, int printerStopBit, int printerParity) throws Exception {
+    public PrinterManager(String printerDevId, int printerPortBaud, int printerDataBit, int printerStopBit, int printerParity,   EventIntExchange printerCommand) throws Exception {
         this.printerDevId = printerDevId;
-
+        this.printerCommand = printerCommand;
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(printerDevId);
         if (portIdentifier.isCurrentlyOwned()) {
             logger.error("Error: Port " + printerDevId + " is currently in use");
@@ -46,32 +47,43 @@ public class PrinterManager {
     }
 
 
-    public synchronized void printAString(String toWrite, EventIntExchange command) {
+    public synchronized void printAWebsocketMessage(String toWrite) {
+        addLogo();
+
         for (byte b : toWrite.getBytes()) {
             logger.debug("Ready to print char {} --> from byte {} ", (char) b, (int) b);
-            command.put((int) b);
+            printerCommand.put((int) b);
         }
-        sendPrintAndCut(command);
-    }
-
-    private void sendPrintAndCut(EventIntExchange command) {
-        command.put(PrinterCommands.PRINT_COMMAND);
-        command.put(PrinterCommands.FULL_KNIFE_CUT_COMMAND);
+        sendPrintAndCut();
 
     }
 
-    public void startPrinterLoopFromWebsocket(EventIntExchange printerCommand, EventStringExchange dataToPrintFromWebsocket) {
-         new Thread(new MainPrinterLoop(printerCommand,dataToPrintFromWebsocket)).start();
+    private void sendPrintAndCut() {
+        printerCommand.put(PrinterCommands.PRINT_COMMAND);
+        printerCommand.put(PrinterCommands.FULL_KNIFE_CUT_COMMAND);
+
+    }
+
+
+
+    private void addLogo() {
+
+        for (byte b : PrinterCommands.LOGO_NEXSE) {
+            printerCommand.put((int)b);
+        }
+    }
+
+    public void startPrinterLoopFromWebsocket(EventStringExchange dataToPrintFromWebsocket) {
+         new Thread(new MainPrinterLoop(dataToPrintFromWebsocket)).start();
     }
 
 
     private class MainPrinterLoop implements Runnable {
 
-        private EventIntExchange printerCommand;
+
         private EventStringExchange dataToPrintFromWebsocket;
 
-        private MainPrinterLoop(EventIntExchange printerCommand, EventStringExchange dataToPrintFromWebsocket) {
-            this.printerCommand = printerCommand;
+        private MainPrinterLoop( EventStringExchange dataToPrintFromWebsocket) {
             this.dataToPrintFromWebsocket = dataToPrintFromWebsocket;
         }
 
@@ -82,7 +94,7 @@ public class PrinterManager {
                 // ciclo infinito di attesa di ricezione dati
                 String mess = dataToPrintFromWebsocket.get();
                 logger.debug(" PRINTER deve stampare {}", mess);
-                printAString(mess, printerCommand);
+                printAWebsocketMessage(mess);
                 logger.debug(" ready for next printing !");
 
 
