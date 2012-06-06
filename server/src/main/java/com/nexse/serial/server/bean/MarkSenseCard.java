@@ -7,6 +7,11 @@ public class MarkSenseCard {
 
     private int row;
 
+    public MarkSenseCard(String rawDataFromScanner) {
+        this.rawString = rawDataFromScanner;
+        this.row = rawDataFromScanner.length() / MarkSenseCard.ONE_ROW_CHARS_NUMBER;
+    }
+
     public int getRow() {
         return row;
     }

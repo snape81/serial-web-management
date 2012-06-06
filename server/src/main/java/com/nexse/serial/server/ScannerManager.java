@@ -61,12 +61,8 @@ public class ScannerManager {
     }
 
     private MarkSenseCard validaLetturaECreaSchedina(String rawDataFromScanner) {
-        MarkSenseCard msc = new MarkSenseCard();
-
-
-        msc.setRawString(rawDataFromScanner);
-        msc.setRow(rawDataFromScanner.length() / MarkSenseCard.ONE_ROW_CHARS_NUMBER);
-
+        MarkSenseCard msc = new MarkSenseCard(rawDataFromScanner);
+        logger.debug("Mark sense generata {}",msc);
         return msc;
     }
 
