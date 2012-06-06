@@ -1,4 +1,4 @@
-package com.nexse.serial.server;
+package com.nexse.serial.server.bean;
 
 public class MarkSenseCard {
     public static final int ONE_ROW_CHARS_NUMBER = 6;

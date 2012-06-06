@@ -7,7 +7,10 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% response.setHeader("Access-Control-Allow-Origin","http://localhost:8080");%>
-<html><head><title>Web Socket Test</title></head>
+<html><head><title>Web Socket Test</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+
+</head>
 <body>
 <script type="text/javascript">
 var socket;
@@ -16,17 +19,39 @@ if (!window.WebSocket) {
 }
 if (window.WebSocket) {
   socket = new WebSocket("ws://10.1.0.83:8080/websocket");
-  socket.onmessage = function(event) { var ta = document.getElementById('responseText');
+  socket.onmessage = function(event) {
+
+
+      var ta = document.getElementById('responseText');
       var lr = document.getElementById('lastRead');
-     // alert();
+
       if (event.data && event.data.indexOf("PRINTED") <0) {
-          lr.value = event.data;
-          if (document.getElementById('autoprint').checked == true) {
-          
-              send(event.data);
+         // dato letto
+          var markSenseCard =  jQuery.parseJSON(event.data);
+
+
+                lr.value = markSenseCard.rawString;
+
+                if (document.getElementById('autoprint').checked == true) {
+
+                    send(markSenseCard.rawString);
+
+                }
+          if (markSenseCard.empty) {
+              ta.value = ta.value + '\n' + markSenseCard.rawString + "(schedina vuota)";
+          } else {
+              ta.value = ta.value + '\n' + markSenseCard.rawString;
           }
+
+      } else {
+          ta.value = ta.value + '\n' + event.data
       }
-      ta.value = ta.value + '\n' + event.data };
+
+
+
+
+
+  };
   socket.onopen = function(event) { var ta = document.getElementById('responseText'); ta.value = "Web Socket opened!"; };
   socket.onclose = function(event) { var ta = document.getElementById('responseText'); ta.value = ta.value + "Web Socket closed"; };
 } else {

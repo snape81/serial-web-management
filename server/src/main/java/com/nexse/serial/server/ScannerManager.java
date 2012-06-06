@@ -1,5 +1,6 @@
 package com.nexse.serial.server;
 
+import com.nexse.serial.server.bean.MarkSenseCard;
 import com.nexse.serial.server.conf.ScannerCommands;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;

@@ -1,6 +1,6 @@
 package com.nexse.serial.server.exchange;
 
-import com.nexse.serial.server.MarkSenseCard;
+import com.nexse.serial.server.bean.MarkSenseCard;
 
 public class EventMarkSenseExchange {
     private MarkSenseCard buffer;
