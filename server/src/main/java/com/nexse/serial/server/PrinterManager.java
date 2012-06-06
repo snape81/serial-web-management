@@ -10,7 +10,9 @@ import gnu.io.SerialPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class PrinterManager {
     static final Logger logger = LoggerFactory.getLogger(PrinterManager.class);
@@ -122,4 +124,28 @@ public class PrinterManager {
             }
         }
     }
+
+    public void loadLogoNexseFromReasources(int numLogo,String filename) {
+           InputStream inLogo = ClassLoader.getSystemResourceAsStream(filename);
+           logger.debug("IN logo  input stream {}",inLogo);
+        byte[] buffer = new byte[1024];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int len = -1;
+        try {
+            while ((len = inLogo.read(buffer)) > -1) {
+             baos.write(buffer,0,len);
+            }
+        } catch (IOException e) {
+          logger.error("errore caricamento logo ");
+        }
+
+        printerCommand.put(0x1D);
+        printerCommand.put(0x23);
+        printerCommand.put(numLogo);
+        printerCommand.put(0x1B);
+        for (byte b : baos.toByteArray()) {
+            printerCommand.put((int)b);
+        }
+
+       }
 }
