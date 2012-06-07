@@ -73,7 +73,7 @@
                                     $("#schedinaContainer").removeClass("schedina2");
 
                     $("#schedinaContainer").addClass("schedinawette");
-                    numeroTotaleRighe = 54;
+                    numeroTotaleRighe = 58;
                 }  else
                 if (markSenseCard.typeStr == "013630") {
                     // schedina2
@@ -81,7 +81,7 @@
                                    // $("#schedinaContainer").removeClass("schedina2");
 
                     $("#schedinaContainer").addClass("schedina2");
-                    numeroTotaleRighe = 54;
+                    numeroTotaleRighe = 58;
                 }
 
 
