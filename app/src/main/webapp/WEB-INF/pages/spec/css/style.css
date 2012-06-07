@@ -1,5 +1,4 @@
 .schedina {
-    background: url("../images/schedinawette.jpg") no-repeat 0 0 transparent;
     display: block;
     width: 400px;
     height: 916px;
@@ -9,7 +8,15 @@
     float: left;
 }
 
-.grid {
+.schedinawette {
+    background: url("../images/schedinawette.jpg") no-repeat 0 0 transparent;
+}
+
+.schedina2 {
+    background: url("../images/schedina2.jpg") no-repeat 0 0 transparent;
+}
+
+.schedinawette .grid {
     position: absolute;
     top: 29px;
     left: 0;
@@ -20,15 +27,23 @@
     display: block;
 }
 
-div#row1.row, div#row4.row, div#row6.row, div#row7.row, div#row8.row, div#row10.row, div#row12.row, div#row13.row, div#row15.row, div#row16.row, div#row19.row, div#row20.row, div#row21.row, div#row22.row, div#row25.row, div#row27.row, div#row28.row, div#row29.row, div#row31.row, div#row32.row, div#row33.row, div#row34.row, div#row36.row, div#row38.row, div#row39.row, div#row40.row, div#row42.row, div#row43.row, div#row45.row, div#row47.row, div#row50.row, div#row51.row, div#row52.row, div#row54.row, div#row55.row {
+.schedinawette div#row1.row, .schedinawette div#row4.row, .schedinawette div#row6.row, .schedinawette div#row7.row, .schedinawette div#row8.row, .schedinawette div#row10.row, .schedinawette div#row12.row, .schedinawette div#row13.row, .schedinawette div#row15.row, .schedinawette div#row16.row, .schedinawette div#row19.row, .schedinawette div#row20.row, .schedinawette div#row21.row, .schedinawette div#row22.row, .schedinawette div#row25.row, .schedinawette div#row27.row, .schedinawette div#row28.row, .schedinawette div#row29.row, .schedinawette div#row31.row, .schedinawette div#row32.row, .schedinawette div#row33.row, .schedinawette div#row34.row, .schedinawette div#row36.row, .schedinawette div#row38.row, .schedinawette div#row39.row, .schedinawette div#row40.row, .schedinawette div#row42.row, .schedinawette div#row43.row, .schedinawette div#row45.row, .schedinawette div#row47.row, .schedinawette div#row50.row, .schedinawette div#row51.row, .schedinawette div#row52.row, .schedinawette div#row54.row, .schedinawette div#row55.row {
     margin-bottom: 5px;
 }
 
-div#row57.row {
+.schedina2 div#row2.row, .schedina2 div#row16.row , .schedina2 div#row21.row , .schedina2 div#row29.row,.schedina2 div#row34.row,.schedina2 div#row39.row, .schedina2 div#row51.row {
+    margin-bottom: 5px;
+}
+
+.schedinawette div#row57.row {
     margin-bottom: 49px;
 }
 
-.row {
+.schedina2 div#row57.row {
+    margin-bottom: 47px;
+}
+
+.schedinawette .row {
     margin: 0 0 6px 0;
     padding: 0;
     width: 400px;
@@ -36,30 +51,71 @@ div#row57.row {
     display: block;
 }
 
-.cell {
+.schedinawette .cell {
     margin: 1px 3px 0 3px;
     padding: 0;
     display: inline-block;
     float: left;
 }
 
-.cel_1 {
+.schedinawette .cel_1 {
     width: 16px;
     height: 6px;
 }
 
-.cel_2 {
+.schedinawette .cel_2 {
     width: 18px;
     height: 6px;
-
 }
 
-.cel_3 {
+.schedinawette .cel_3 {
     width: 19px;
     height: 7px;
+}
 
+.schedina2 .cell {
+    margin: 0 4px 0 1px;
+    padding: 0;
+    display: inline-block;
+    float: left;
+}
+
+.schedina2 .cel_1 {
+    width: 16px;
+    height: 6px;
+}
+
+.schedina2 .cel_2 {
+    width: 18px;
+    height: 6px;
+}
+
+.schedina2 .cel_3 {
+    width: 19px;
+    height: 7px;
 }
 
 .selected {
-    background-color: #797f7e;
+    background-color: black;
+}
+
+.schedina2 .grid {
+    position: absolute;
+    top: 27px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 400px;
+    height: 890px;
+    display: block;
+
+}
+
+.schedina2 .row {
+    margin: 0 0 6px 0;
+    padding: 0 0 0 16px;
+    width: 400px;
+    height: 8px;
+    display: block;
+
 }
