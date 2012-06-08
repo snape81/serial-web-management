@@ -69,19 +69,23 @@
                 var numeroTotaleRighe;
                 if (markSenseCard.typeStr == "013E30") {
                     // sportwette
-                    // $("#schedinaContainer").removeClass("schedinawette");
-                                    $("#schedinaContainer").removeClass("schedina2");
+                    $("#schedinaContainer").removeClass("schedina2");
+                    $("#schedinaContainer").removeClass("schedina3");
 
                     $("#schedinaContainer").addClass("schedinawette");
                     numeroTotaleRighe = 58;
-                }  else
-                if (markSenseCard.typeStr == "013630") {
+                } else if (markSenseCard.typeStr == "013630") {
                     // schedina2
                     $("#schedinaContainer").removeClass("schedinawette");
-                                   // $("#schedinaContainer").removeClass("schedina2");
-
+                    $("#schedinaContainer").removeClass("schedina3");
                     $("#schedinaContainer").addClass("schedina2");
                     numeroTotaleRighe = 58;
+                } else if (markSenseCard.typeStr == "011D00") {
+                    //schedina3
+                    $("#schedinaContainer").removeClass("schedinawette");
+                    $("#schedinaContainer").removeClass("schedina2");
+                    $("#schedinaContainer").addClass("schedina3");
+                    numeroTotaleRighe = 43;
                 }
 
 

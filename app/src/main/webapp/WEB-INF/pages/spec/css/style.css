@@ -16,6 +16,10 @@
     background: url("../images/schedina2.jpg") no-repeat 0 0 transparent;
 }
 
+.schedina3 {
+    background: url("../images/schedina3.jpg") no-repeat 0 0 transparent;
+}
+
 .schedinawette .grid {
     position: absolute;
     top: 29px;
@@ -27,12 +31,30 @@
     display: block;
 }
 
+.schedina3 .grid {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 400px;
+    height: 890px;
+    display: block;
+
+}
+
+
+
 .schedinawette div#row1.row, .schedinawette div#row4.row, .schedinawette div#row6.row, .schedinawette div#row7.row, .schedinawette div#row8.row, .schedinawette div#row10.row, .schedinawette div#row12.row, .schedinawette div#row13.row, .schedinawette div#row15.row, .schedinawette div#row16.row, .schedinawette div#row19.row, .schedinawette div#row20.row, .schedinawette div#row21.row, .schedinawette div#row22.row, .schedinawette div#row25.row, .schedinawette div#row27.row, .schedinawette div#row28.row, .schedinawette div#row29.row, .schedinawette div#row31.row, .schedinawette div#row32.row, .schedinawette div#row33.row, .schedinawette div#row34.row, .schedinawette div#row36.row, .schedinawette div#row38.row, .schedinawette div#row39.row, .schedinawette div#row40.row, .schedinawette div#row42.row, .schedinawette div#row43.row, .schedinawette div#row45.row, .schedinawette div#row47.row, .schedinawette div#row50.row, .schedinawette div#row51.row, .schedinawette div#row52.row, .schedinawette div#row54.row, .schedinawette div#row55.row {
     margin-bottom: 5px;
 }
 
 .schedina2 div#row2.row, .schedina2 div#row16.row , .schedina2 div#row21.row , .schedina2 div#row29.row,.schedina2 div#row34.row,.schedina2 div#row39.row, .schedina2 div#row51.row {
     margin-bottom: 5px;
+}
+
+.schedina3 div#row16.row,.schedina3 div#row19.row,.schedina3 div#row24.row, .schedina3 div#row25.row,.schedina3 div#row31.row, .schedina3 div#row39.row {
+    margin-bottom: 8px;
 }
 
 .schedinawette div#row57.row {
@@ -43,8 +65,20 @@
     margin-bottom: 47px;
 }
 
+.schedina3 div#row42.row {
+    margin-bottom: 61px;
+}
+
 .schedinawette .row {
     margin: 0 0 6px 0;
+    padding: 0;
+    width: 400px;
+    height: 9px;
+    display: block;
+}
+
+.schedina3 .row {
+    margin: 1px 0 9px 8px;
     padding: 0;
     width: 400px;
     height: 9px;
@@ -80,6 +114,13 @@
     float: left;
 }
 
+.schedina3 .cell {
+    margin: 0 6px 0 1px;
+    padding: 0;
+    display: inline-block;
+    float: left;
+}
+
 .schedina2 .cel_1 {
     width: 16px;
     height: 6px;
@@ -93,6 +134,24 @@
 .schedina2 .cel_3 {
     width: 19px;
     height: 7px;
+}
+
+.schedina3 .cel_1 {
+    width: 16px;
+    height: 6px;
+    margin-right: 4px;
+}
+
+.schedina3 .cel_2 {
+    width: 16px;
+    height: 6px;
+    margin-right: 7px;
+
+}
+
+.schedina3 .cel_3 {
+    width: 17px;
+    height: 6px;
 }
 
 .selected {
