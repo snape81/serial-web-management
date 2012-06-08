@@ -11,6 +11,7 @@ public class MarkSenseCard {
     public static final String RAW_VALUE_SPORTWETTE_CARD = "013E30";
     public static final String RAW_VALUE_SCHEDINA2_CARD = "013630";
     public static final String RAW_VALUE_SCHEDINA3_CARD = "011D00";
+    public static final String RAW_VALUE_SCHEDINA4_CARD = "010230";
 
     public static final int NUM_RIGHE_CARD_SPORTWETTEN = 54;
     public static final int NUM_RIGHE_CARD_SCHEDINA2 = 54;

@@ -19,21 +19,21 @@
 
     var PRE_RIGA_VUOTA = '<div id="row';
 
-    var POST_RIGA_VUOTA = '" class="row">'+
-           '<div class="cell cel_1 "></div>'+
-           '<div class="cell cel_2 "></div>'+
-           '<div class="cell cel_2 "></div>'+
-           '<div class="cell cel_2 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_2 "></div>'+
-           '<div class="cell cel_2 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_3 "></div>'+
-           '<div class="cell cel_3 "></div></div>';
+    var POST_RIGA_VUOTA = '" class="row">' +
+            '<div class="cell cel_1 "></div>' +
+            '<div class="cell cel_2 "></div>' +
+            '<div class="cell cel_2 "></div>' +
+            '<div class="cell cel_2 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_2 "></div>' +
+            '<div class="cell cel_2 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_3 "></div>' +
+            '<div class="cell cel_3 "></div></div>';
 
     function getRigaVuota(index) {
         return PRE_RIGA_VUOTA + index + POST_RIGA_VUOTA;
@@ -53,9 +53,9 @@
             if (event.data && event.data.indexOf("PRINTED") < 0) {
                 // dato letto
                 var markSenseCard = jQuery.parseJSON(event.data);
-                document.getElementById("schedinaContainer").style.display ="none";
-               // $("#schedinaContainer").removeClass("schedinawette");
-               // $("#schedinaContainer").removeClass("schedina2");
+                document.getElementById("schedinaContainer").style.display = "none";
+                // $("#schedinaContainer").removeClass("schedinawette");
+                // $("#schedinaContainer").removeClass("schedina2");
 
 
                 lr.value = markSenseCard.rawString;
@@ -71,6 +71,7 @@
                     // sportwette
                     $("#schedinaContainer").removeClass("schedina2");
                     $("#schedinaContainer").removeClass("schedina3");
+                    $("#schedinaContainer").removeClass("schedina4");
 
                     $("#schedinaContainer").addClass("schedinawette");
                     numeroTotaleRighe = 58;
@@ -78,14 +79,23 @@
                     // schedina2
                     $("#schedinaContainer").removeClass("schedinawette");
                     $("#schedinaContainer").removeClass("schedina3");
+                    $("#schedinaContainer").removeClass("schedina4");
                     $("#schedinaContainer").addClass("schedina2");
                     numeroTotaleRighe = 58;
                 } else if (markSenseCard.typeStr == "011D00") {
                     //schedina3
                     $("#schedinaContainer").removeClass("schedinawette");
                     $("#schedinaContainer").removeClass("schedina2");
+                    $("#schedinaContainer").removeClass("schedina4");
                     $("#schedinaContainer").addClass("schedina3");
                     numeroTotaleRighe = 43;
+                } else if (markSenseCard.typeStr == "010230") {
+                    //schedina3
+                    $("#schedinaContainer").removeClass("schedinawette");
+                    $("#schedinaContainer").removeClass("schedina2");
+                    $("#schedinaContainer").removeClass("schedina3");
+                    $("#schedinaContainer").addClass("schedina4");
+                    numeroTotaleRighe = 40;
                 }
 
 
@@ -97,17 +107,17 @@
                 } else {
                     ta.value = ta.value + '\n' + markSenseCard.rawString;
                     // caricare immagine background corretta
-                     var grid = "";
-                    grid+=getRigaVuota(1);
-                    for (var i=2;i<=numeroTotaleRighe;i++) {
+                    var grid = "";
+                    grid += getRigaVuota(1);
+                    for (var i = 2; i <= numeroTotaleRighe; i++) {
                         if (markSenseCard.listaRighe[i]) {
-                            grid+=generateRowSchedina(i,markSenseCard.listaRighe[i].markedCells);
+                            grid += generateRowSchedina(i, markSenseCard.listaRighe[i].markedCells);
                         } else {
-                            grid+=getRigaVuota(i);
+                            grid += getRigaVuota(i);
                         }
                     }
                     document.getElementById("gridContainer").innerHTML = grid;
-                    document.getElementById("schedinaContainer").style.display ="block";
+                    document.getElementById("schedinaContainer").style.display = "block";
                 }
 
             } else {
@@ -159,11 +169,11 @@
             }
             var selectedToken = "";
 
-            if (arrayCells[j-1] == true) {
-              selectedToken = 'selected';
+            if (arrayCells[j - 1] == true) {
+                selectedToken = 'selected';
             }
 
-            contentent += '<div class="cell cel_' + indiceRiga + ' '+ selectedToken + '"></div>';
+            contentent += '<div class="cell cel_' + indiceRiga + ' ' + selectedToken + '"></div>';
         }
         contentent += '</div>';
         return contentent;
@@ -187,9 +197,9 @@
 </div>
 
 <div class="schedina" id="schedinaContainer" style="display: none;">
-<div class="grid"  id="gridContainer">
+    <div class="grid" id="gridContainer">
 
-</div>
+    </div>
 </div>
 
 </body>
