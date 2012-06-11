@@ -63,6 +63,7 @@
 
 
     <build>
+        <finalName>serial-server</finalName>
         <plugins>
             <plugin>
                      <artifactId>maven-remote-resources-plugin</artifactId>

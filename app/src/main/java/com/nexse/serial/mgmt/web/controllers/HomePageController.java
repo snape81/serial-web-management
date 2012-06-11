@@ -11,15 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller("HomePageController")
 public class HomePageController {
-    public static final String INDEX_TEMPLATE_VIEW = "template/index";
+    public static final String INDEX_TEMPLATE_VIEW = "testMarksenseCards";
 
     @Log
     private Logger log;
 
-
-
-
-    @RequestMapping(value = "/index",  method = RequestMethod.GET)
+    @RequestMapping(value = "/markSenseCards",  method = RequestMethod.GET)
     public ModelAndView showIndex(HttpServletResponse response) {
              log.debug(" HomePageController -- start ");
 
