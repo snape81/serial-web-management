@@ -3,7 +3,7 @@
 <html>
 <head><title>Web Socket Test</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-    <link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/betbull/static/css/style.css" rel="stylesheet" type="text/css"/>
 
 </head>
 <body>
