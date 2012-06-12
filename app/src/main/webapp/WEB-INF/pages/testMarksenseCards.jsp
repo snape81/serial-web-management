@@ -36,7 +36,7 @@
         window.WebSocket = window.MozWebSocket;
     }
     if (window.WebSocket) {
-        socket = new WebSocket("ws://10.1.0.83:8080/websocket");
+        socket = new WebSocket("ws://10.1.0.83:9090/websocket");
         socket.onmessage = function (event) {
 
 

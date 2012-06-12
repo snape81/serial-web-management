@@ -13,7 +13,7 @@
     <groupId>com.nexse.tools</groupId>
     <artifactId>serial-web-management-server</artifactId>
     <version>1.0</version>
-    <name>Serial Port Web Management- Server Websocket</name>
+    <name>Serial Port Web Management - Server Websocket</name>
 
     <dependencies>
         <dependency>

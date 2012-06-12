@@ -6,7 +6,6 @@
 
     <context:property-placeholder location="classpath*:META-INF/spring/*.properties"/>
 
-    <bean id="logginInjector" class="com.nexse.serial.mgmt.logger.LoggerPostProcessor" />
 
 
 </beans>
