@@ -110,8 +110,8 @@
                         }
                     }
                     document.getElementById("gridContainer").innerHTML = grid;
-                    document.getElementById("schedinaContainer").style.display = "block";
                 }
+                document.getElementById("schedinaContainer").style.display = "block";
 
             } else {
                 ta.value = ta.value + '\n' + event.data
