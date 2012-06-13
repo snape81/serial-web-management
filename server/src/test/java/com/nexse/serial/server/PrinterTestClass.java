@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PrinterTestClass {
-    public static final int LINE_FEED = 10;
-    public static final int LOGO_NEXSE_ID = 4;
+    private static final int LINE_FEED = 10;
+    private static final int LOGO_NEXSE_ID = 4;
 
 
 
@@ -22,6 +22,7 @@ public class PrinterTestClass {
 
     //private static final ArrayList<Integer>  = new ArrayList<Integer>(Arrays.asList(new Integer[] {} ));
     private static final ArrayList<Integer> BETSLIPID_CHAR_SIZE_COMMAND = new ArrayList<Integer>(Arrays.asList(new Integer[] {29,33,33} ));
+    private static final ArrayList<Integer> RESET_CHAR_SIZE = new ArrayList<Integer>(Arrays.asList(new Integer[] {29,33,0} ));
 
 
     private static int[] testIdChar = new int[]{29,35,4,29,47,0,10,  29,33,33,27,92,65,00,48,51,45,48,51,49,45,48,48,48,48,51,48,10,19,25};
@@ -42,6 +43,8 @@ public class PrinterTestClass {
         dataToPrint.addAll(BETSLIPID_CHAR_SIZE_COMMAND);
         dataToPrint.addAll(getPrintableByString("03-031-000030"));
         dataToPrint.add(LINE_FEED);
+        dataToPrint.addAll(RESET_CHAR_SIZE);
+        dataToPrint.addAll(LEFT_JUSTIFICATION);
         dataToPrint.addAll(getPrintableByString("cccc "));
         dataToPrint.add(LINE_FEED);
         dataToPrint.addAll(getPrintableByString("cccc "));
@@ -99,6 +102,8 @@ public class PrinterTestClass {
         return ret;
 
     }
+
+
 
 }
 

@@ -1,6 +1,6 @@
 
 
- <GS> 		(029) HEX---> (1d)
+ <GS> 		(029) HEX---> (1d)     // dimensione carattere
  ! 		    (033) HEX---> (21)
  ! 		    (033) HEX---> (21)
 
@@ -23,26 +23,31 @@
  3 		    (051) HEX---> (33)
  0 		    (048) HEX---> (30)
 
- <LF> 		(010) HEX---> (0a)
+ <LF> 		(010) HEX---> (0a)   line feed
 
 
- <GS> 		(029) HEX---> (1d)
+ <GS> 		(029) HEX---> (1d)    //   reset dimensione carattere
  ! 		    (033) HEX---> (21)
  <NUL> 		(000) HEX---> (0)
- <ESC> 		(027) HEX---> (1b)
- a 		(097) HEX---> (61)
- 0 		(048) HEX---> (30)
- <GS> 		(029) HEX---> (1d)
- # 		(035) HEX---> (23)
+
+ <ESC> 		(027) HEX---> (1b)   // left justification
+ a 	    	(097) HEX---> (61)
+ 0  		(048) HEX---> (30)
+
+ <GS> 		(029) HEX---> (1d) // select logo 12
+ # 		    (035) HEX---> (23)
  <FF> 		(012) HEX---> (c)
- <GS> 		(029) HEX---> (1d)
- / 		(047) HEX---> (2f)
+
+ <GS> 		(029) HEX---> (1d)   // print selected logo
+ /  		(047) HEX---> (2f)
  <NUL> 		(000) HEX---> (0)
- <NAK> 		(021) HEX---> (15)
+
+ <NAK> 		(021) HEX---> (15) // feed 6 dot rows
  <ACK> 		(006) HEX---> (6)
- <ESC> 		(027) HEX---> (1b)
- \ 		(092) HEX---> (5c)
- A 		(065) HEX---> (41)
+
+ <ESC> 		(027) HEX---> (1b)   // set relative printer position
+ \ 		    (092) HEX---> (5c)
+ A 		    (065) HEX---> (41)
  <NUL> 		(000) HEX---> (0)
 
 
