@@ -85,26 +85,31 @@ public class ScannerManager {
         @Override
         public void run() {
             while (true) {
-                        // ciclo infinito di attesa di ricezione dati
-                        String mess = scannerData.get();
-                        logger.debug(" SCANNER READER ha letto {}", mess);
-                        MarkSenseCard msc = validaLetturaECreaSchedina(mess);
-                        scannerDataToWebSocket.put(msc);
+                // ciclo infinito di attesa di ricezione dati
+                String mess = scannerData.get();
+                logger.debug(" SCANNER READER ha letto {}", mess);
+                MarkSenseCard msc = validaLetturaECreaSchedina(mess);
+                scannerDataToWebSocket.put(msc);
+                if (!msc.isValid()) {
+                    logger.debug(" lettura errata dallo scanner", msc.getRow());
+                    logger.debug(" Ejecting in bad tray .... ");
+                    scannerCommand.put(ScannerCommands.EJECT_IN_BAD_TRAY_S);
+                }
 
-                        if (msc.isEmpty()) {
-                            logger.debug(" msc vuota ", msc.getRow());
-                            logger.debug(" Ejecting in bad tray .... ");
-                            scannerCommand.put(ScannerCommands.EJECT_IN_BAD_TRAY_S);
-                        } else {
-                            logger.debug(" msc validata {} la spedisco alla websocket ", msc);
-                            logger.debug(" Ejecting in good tray .... ");
-                            scannerCommand.put(ScannerCommands.EJECT_IN_GOOD_TRAY_G);
-                        }
+                if (msc.isEmpty()) {
+                    logger.debug(" msc vuota ", msc.getRow());
+                    logger.debug(" Ejecting in bad tray .... ");
+                    scannerCommand.put(ScannerCommands.EJECT_IN_BAD_TRAY_S);
+                } else {
+                    logger.debug(" msc validata {} la spedisco alla websocket ", msc);
+                    logger.debug(" Ejecting in good tray .... ");
+                    scannerCommand.put(ScannerCommands.EJECT_IN_GOOD_TRAY_G);
+                }
 
-                        logger.debug(" ready for next reading !");
+                logger.debug(" ready for next reading !");
 
 
-                    }
-    }
+            }
+        }
     }
 }

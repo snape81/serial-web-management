@@ -23,10 +23,23 @@ public class MarkSenseCard {
     private String rawString;
     private int row;
     private HashMap<Integer,CardRow> listaRighe = new HashMap<>();
+    private boolean valid;
 
     public MarkSenseCard(String rawDataFromScanner) {
+
+
+
         this.rawString = rawDataFromScanner;
+        this.valid = checkValidity(rawDataFromScanner);
+
+        if(!valid)  {
+            return;
+        }
+
+
         int stringLength = rawDataFromScanner.length();
+
+
         this.row = stringLength / MarkSenseCard.ONE_ROW_CHARS_NUMBER;
         int actualRow = 0;
         while (actualRow < row) {
@@ -41,6 +54,25 @@ public class MarkSenseCard {
             actualRow++;
         }
         this.typeStr = listaRighe.get(1).getRawString();
+    }
+
+    private boolean checkValidity(String rawDataFromScanner) {
+              // non null o vuota
+        if (rawDataFromScanner == null || rawDataFromScanner.equals(" ")) {
+            return Boolean.FALSE;
+        }
+         // lunghezza deve essere > 0 e multiplo di 6
+        if (rawDataFromScanner.isEmpty()) {
+            return Boolean.FALSE;
+        }
+        if (rawDataFromScanner.length() % ONE_ROW_CHARS_NUMBER != 0 ) {
+            return Boolean.FALSE;
+        }
+        if(!rawDataFromScanner.startsWith("01")) {
+           return Boolean.FALSE;
+        }
+       return Boolean.TRUE;
+
     }
 
     public int getRow() {
@@ -63,6 +95,10 @@ public class MarkSenseCard {
         return typeStr;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -71,6 +107,7 @@ public class MarkSenseCard {
         sb.append(", rawString='").append(rawString).append('\'');
         sb.append(", row=").append(row);
         sb.append(", listaRighe=").append(listaRighe);
+        sb.append(", valid=").append(valid);
         sb.append('}');
         return sb.toString();
     }

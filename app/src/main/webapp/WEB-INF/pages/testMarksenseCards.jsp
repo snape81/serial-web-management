@@ -49,7 +49,7 @@
                 document.getElementById("schedinaContainer").style.display = "none";
                 // $("#schedinaContainer").removeClass("schedinawette");
                 // $("#schedinaContainer").removeClass("schedina2");
-
+                if (markSenseCard.valid) {
 
                 lr.value = markSenseCard.rawString;
 
@@ -114,6 +114,15 @@
                     document.getElementById("gridContainer").innerHTML = grid;
                 }
                 document.getElementById("schedinaContainer").style.display = "block";
+                } else {
+                    $("#schedinaContainer").removeClass("schedinawette");
+                                      $("#schedinaContainer").removeClass("schedina2");
+                                      $("#schedinaContainer").removeClass("schedina3");
+                                      $("#schedinaContainer").removeClass("schedina4");
+                    document.getElementById("gridContainer").innerHTML = '';
+                    document.getElementById("schedinaContainer").style.display = "none";
+                    ta.value = ta.value + '\n' + "BAD READING - PLEASE RETRY";
+                }
 
             } else {
                 ta.value = ta.value + '\n' + event.data
