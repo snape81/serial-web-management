@@ -55,7 +55,9 @@
 
                 if (document.getElementById('autoprint').checked == true) {
 
-                    send(markSenseCard.rawString);
+                    if (!markSenseCard.empty) {
+                        send(markSenseCard.rawString);
+                    }
 
                 }
 
@@ -95,7 +97,7 @@
                 if (markSenseCard.empty) {
 
                     ta.value = ta.value + '\n' + markSenseCard.rawString + "(schedina vuota)";
-
+                    document.getElementById("gridContainer").innerHTML = '';
 
                 } else {
                     ta.value = ta.value + '\n' + markSenseCard.rawString;
