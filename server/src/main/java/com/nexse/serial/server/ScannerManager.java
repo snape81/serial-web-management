@@ -1,6 +1,7 @@
 package com.nexse.serial.server;
 
 import com.nexse.serial.server.bean.MarkSenseCard;
+import com.nexse.serial.server.bean.MarkSenseCardFactory;
 import com.nexse.serial.server.conf.ScannerCommands;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
@@ -61,7 +62,7 @@ public class ScannerManager {
     }
 
     private MarkSenseCard validaLetturaECreaSchedina(String rawDataFromScanner) {
-        MarkSenseCard msc = new MarkSenseCard(rawDataFromScanner);
+        MarkSenseCard msc = MarkSenseCardFactory.getMscFromString(rawDataFromScanner);
         logger.debug("Mark sense generata {}",msc);
         return msc;
     }

@@ -4,19 +4,8 @@ import java.util.HashMap;
 
 public class MarkSenseCard {
 
-
-
-
-
-    public static final String RAW_VALUE_SPORTWETTE_CARD = "013E30";
-    public static final String RAW_VALUE_SCHEDINA2_CARD = "013630";
-    public static final String RAW_VALUE_SCHEDINA3_CARD = "011D00";
-    public static final String RAW_VALUE_SCHEDINA4_CARD = "010230";
-
-    public static final int NUM_RIGHE_CARD_SPORTWETTEN = 54;
-    public static final int NUM_RIGHE_CARD_SCHEDINA2 = 54;
-
-    public static final int ONE_ROW_CHARS_NUMBER = 6;
+    public static final int TYPE_UNKNOWNTYPE = 0;
+    public static final int TYPE_SPORTWETTEN = 1;
 
 
     private String typeStr;
@@ -24,13 +13,14 @@ public class MarkSenseCard {
     private int row;
     private HashMap<Integer,CardRow> listaRighe = new HashMap<>();
     private boolean valid;
+    private int typeId;
 
-    public MarkSenseCard(String rawDataFromScanner) {
+    public MarkSenseCard(String rawDataFromScanner,Boolean validread,int typeID) {
 
 
-
+        this.typeId = typeID;
         this.rawString = rawDataFromScanner;
-        this.valid = checkValidity(rawDataFromScanner);
+        this.valid = validread;
 
         if(!valid)  {
             return;
@@ -40,15 +30,15 @@ public class MarkSenseCard {
         int stringLength = rawDataFromScanner.length();
 
 
-        this.row = stringLength / MarkSenseCard.ONE_ROW_CHARS_NUMBER;
+        this.row = stringLength / MarkSenseCardFactory.ONE_ROW_CHARS_NUMBER;
         int actualRow = 0;
         while (actualRow < row) {
-            int startIndex = actualRow * ONE_ROW_CHARS_NUMBER;
+            int startIndex = actualRow * MarkSenseCardFactory.ONE_ROW_CHARS_NUMBER;
             CardRow cr ;
             if (actualRow == (row -1)) {
                  cr =new CardRow(rawString.substring(startIndex));
             } else {
-                cr = new CardRow(rawString.substring(startIndex,startIndex+ONE_ROW_CHARS_NUMBER));
+                cr = new CardRow(rawString.substring(startIndex,startIndex+MarkSenseCardFactory.ONE_ROW_CHARS_NUMBER));
             }
             listaRighe.put(cr.getRowIndex(),cr);
             actualRow++;
@@ -56,24 +46,7 @@ public class MarkSenseCard {
         this.typeStr = listaRighe.get(1).getRawString();
     }
 
-    private boolean checkValidity(String rawDataFromScanner) {
-              // non null o vuota
-        if (rawDataFromScanner == null || rawDataFromScanner.equals(" ")) {
-            return Boolean.FALSE;
-        }
-         // lunghezza deve essere > 0 e multiplo di 6
-        if (rawDataFromScanner.isEmpty()) {
-            return Boolean.FALSE;
-        }
-        if (rawDataFromScanner.length() % ONE_ROW_CHARS_NUMBER != 0 ) {
-            return Boolean.FALSE;
-        }
-        if(!rawDataFromScanner.startsWith("01")) {
-           return Boolean.FALSE;
-        }
-       return Boolean.TRUE;
 
-    }
 
     public int getRow() {
         return row;

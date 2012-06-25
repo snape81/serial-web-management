@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class CardRow {
     static final Logger logger = LoggerFactory.getLogger(CardRow.class);
 
-    public static final int BITMASK_MARK_1 = 0x2000;
+        public static final int BITMASK_MARK_1 = 0x2000;
         public static final int BITMASK_MARK_2 = 0x1000;
         public static final int BITMASK_MARK_3 = 0x800;
         public static final int BITMASK_MARK_4 = 0x400;
