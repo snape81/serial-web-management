@@ -7,7 +7,34 @@
 
 </head>
 <body>
+
+<div style="display: none">
+    <div id="sportwetteTemplate" >
+    <h3> SPORTWETTE </h3>
+            <h4> Stake <span id="stakeMsc1" style="color: blue;" ></span> &euro;</h4>
+            <table class="sportwette" id="sportwetteTable">
+                <thead>
+                <tr>
+                    <th> # </th>
+                    <th>kombi</th>
+                    <th>Programm</th>
+                    <th>Bet Number</th>
+                    <th>Specials</th>
+                    <th>Kurs</th>
+                    <th>Ergebniswette</th>
+                    <th>bank</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+</div>
+</div>
 <script type="text/javascript">
+
+
     var socket;
 
     var PRE_RIGA_VUOTA = '<div id="row';
@@ -36,8 +63,10 @@
         window.WebSocket = window.MozWebSocket;
     }
     if (window.WebSocket) {
-        socket = new WebSocket("ws://127.0.0.1:9090/websocket");
+        socket = new WebSocket("ws://10.0.0.221:9090/websocket");
         socket.onmessage = function (event) {
+            $("#marksensecarddetails").show();
+            $("#marksensecarddetails").empty();
 
 
             var ta = document.getElementById('responseText');
@@ -70,6 +99,36 @@
 
                     $("#schedinaContainer").addClass("schedinawette");
                     numeroTotaleRighe = 58;
+
+                    $("#sportwetteTemplate").clone().attr("id","clone1").appendTo("#marksensecarddetails");
+                    $("div#clone1 span#stakeMsc1").text(markSenseCard.stake);
+
+
+
+                    for (var k = 0; k < 10; k++) {
+                         var currentBettedEvent = markSenseCard.bettedEvents[k];
+                        if (currentBettedEvent.ticked) {
+
+                            $("div#clone1 table#sportwetteTable").append(
+                                        $('<tr>').append($('<td>').text(k + 1),
+                                                $('<td>').text(currentBettedEvent.combiChecked ? 'X' : '-'),
+                                                $('<td class="right">').text(currentBettedEvent.programmTick != '' ? currentBettedEvent.programmTick : '-'),
+                                                $('<td class="right">').text(currentBettedEvent.marketCode != '' ? currentBettedEvent.marketCode : '-'),
+                                                $('<td>').text(currentBettedEvent.specials != '' ? currentBettedEvent.specials : '-'),
+                                                $('<td>').text(currentBettedEvent.kurs != '' ? currentBettedEvent.kurs : '-'),
+                                                $('<td>').text((currentBettedEvent.ergebnieswetteA != '' ? currentBettedEvent.ergebnieswetteA : '-') + ' : ' + (currentBettedEvent.ergebnieswetteB != '' ? currentBettedEvent.ergebnieswetteB : '-')),
+                                                $('<td>').text(currentBettedEvent.bankChecked ? 'X' : '-'))
+
+
+                                )
+
+
+                        }
+
+                    }
+
+                    $("#marksensecarddetails").show();
+
                 } else if (markSenseCard.typeStr == "013630") {
                     // schedina2
                     $("#schedinaContainer").removeClass("schedinawette");
@@ -133,10 +192,12 @@
         socket.onopen = function (event) {
             var ta = document.getElementById('responseText');
             ta.value = "Web Socket opened!";
+            document.getElementById("lastRead").value = "";
         };
         socket.onclose = function (event) {
             var ta = document.getElementById('responseText');
             ta.value = ta.value + "Web Socket closed";
+            document.getElementById("lastRead").value = "";
         };
     } else {
         alert("Your browser does not support Web Socket.");
@@ -192,13 +253,25 @@
         <h3>Last Data Read </h3>
         <textarea readonly="readonly" id="lastRead" style="width: 600px; height:50px;"
                   name="message"></textarea><br/><br/>
+
         <input type="button" value="PRINT" onclick="send(this.form.message.value)"/>
         Automatic print: <input type="checkbox" name="autoprint" id="autoprint"/>
 
         <h3>Log AREA</h3>
         <textarea readonly="readonly" id="responseText" style="width: 500px; height:300px;"></textarea>
     </form>
+
+    <div id="marksensecarddetails" style="display: none">
+
+
+    </div>
 </div>
+
+
+
+<script type="text/javascript">
+
+</script>
 
 <div class="schedina" id="schedinaContainer" style="display: none;">
     <div class="grid" id="gridContainer">

@@ -43,6 +43,7 @@ public class MarkSenseCard {
             listaRighe.put(cr.getRowIndex(),cr);
             actualRow++;
         }
+        this.typeId = TYPE_UNKNOWNTYPE;
         this.typeStr = listaRighe.get(1).getRawString();
     }
 
@@ -72,6 +73,14 @@ public class MarkSenseCard {
         return valid;
     }
 
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -81,6 +90,7 @@ public class MarkSenseCard {
         sb.append(", row=").append(row);
         sb.append(", listaRighe=").append(listaRighe);
         sb.append(", valid=").append(valid);
+        sb.append(", typeId=").append(typeId);
         sb.append('}');
         return sb.toString();
     }

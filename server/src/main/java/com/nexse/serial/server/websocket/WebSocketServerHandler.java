@@ -18,7 +18,7 @@ package com.nexse.serial.server.websocket;
 import com.nexse.serial.server.bean.MarkSenseCard;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
-import org.codehaus.jackson.map.ObjectMapper;
+import flexjson.JSONSerializer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
@@ -30,8 +30,6 @@ import org.jboss.netty.handler.codec.http.websocketx.*;
 import org.jboss.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
@@ -157,10 +155,12 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
 
 
     private String getJsonString(MarkSenseCard msc) {
-       ObjectMapper mapper = new ObjectMapper();
+        JSONSerializer serializer = new JSONSerializer();
         try {
-           return  mapper.writeValueAsString(msc);
-        } catch (IOException e) {
+
+                return  serializer.deepSerialize(msc);
+
+        } catch (Exception e) {
             logger.error("Eccezione nella serializzazione JSON ",e);
             return "error";
         }
@@ -188,10 +188,12 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
 
 
                         MarkSenseCard mess = dataRead.get();
+
                         logger.debug(" Il server websocket ha letto la mark sense card {}", mess);
-                        logger.debug(" JSON: {}",getJsonString(mess));
+                        String jsonSerialization = getJsonString(mess);
+                        logger.debug(" JSON: {}",jsonSerialization);
                         if (chl != null && chl.isOpen()) {
-                                chl.write(new TextWebSocketFrame(getJsonString(mess)));
+                                chl.write(new TextWebSocketFrame(jsonSerialization));
                         } else {
                             logger.error(" Context e' null il messaggio " + mess + " e' stato scartato");
                         }

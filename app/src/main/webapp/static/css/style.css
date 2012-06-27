@@ -237,3 +237,22 @@
     display: block;
 
 }
+
+
+table.sportwette {
+    border: 4px ridge black;
+    border-spacing: 2px;
+    border-collapse: separate;
+	background-color: rgb(255, 245, 238);
+}
+table.sportwette th {
+    border: 1px inset gray;
+    padding: 1px;
+    background-color: #d3d3d3;
+}
+table.sportwette td {
+    border: 1px inset gray;
+    padding: 1px;
+    text-align: center;
+    background-color: white;
+}

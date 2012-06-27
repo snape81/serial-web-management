@@ -32,8 +32,8 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
     private static final int START_INDEX_ERGEBNISWETTE_A = 13;
     private static final int END_INDEX_ERGEBNISWETTE_A = 19;
 
-    private static final int START_INDEX_KURS = 13;
-    private static final int END_INDEX_KURS = 19;
+    private static final int START_INDEX_KURS = 22;
+    private static final int END_INDEX_KURS = 24;
 
     private static final int START_INDEX_SPECIALS = 27;
     private static final int END_INDEX_SPECIALS = 33;
@@ -61,13 +61,14 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
 
     public SportwettenMarkSenseCard(String rawDataFromScanner, Boolean valid) {
         super(rawDataFromScanner, valid, MarkSenseCard.TYPE_SPORTWETTEN);
+        setTypeId(MarkSenseCard.TYPE_SPORTWETTEN);
 
         for (int i = 0; i < bettedEvents.length; i++) {
             bettedEvents[i] = new SportwettenBettedEvent(OFFSET_ERGEBNISWETTE_B, OFFSET_ERGEBNISWETTE_A, OFFSET_KURS, OFFSET_SPECIALS, OFFSET_PROGRAMM, OFFSET_MARKET_CODE);
         }
 
 
-        if (this.isValid()) {
+        if (isValid()) {
             for (int i = START_SPORTWETTEN_GENERAL_INDEX; i <= END_SPORTWETTEN_GENERAL_INDEX; i++) {
                 if (getListaRighe().containsKey(i)) {
                     CardRow cr = getListaRighe().get(i);
@@ -81,27 +82,27 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
                         combiTicker(markedCells,i);
                     }
 
-                    if (i <= START_INDEX_ERGEBNISWETTE_B && i >= END_INDEX_ERGEBNISWETTE_B) {
+                    if (i >= START_INDEX_ERGEBNISWETTE_B && i <= END_INDEX_ERGEBNISWETTE_B ) {
                         ergebnieswetteBTicker(markedCells, i);
                     }
 
-                    if (i <= START_INDEX_ERGEBNISWETTE_A && i >= END_INDEX_ERGEBNISWETTE_A) {
+                    if (i >= START_INDEX_ERGEBNISWETTE_A && i <= END_INDEX_ERGEBNISWETTE_A) {
                         ergebnieswetteATicker(markedCells, i);
                     }
 
-                    if (i <= START_INDEX_KURS && i >= END_INDEX_KURS) {
+                    if ( i >= START_INDEX_KURS && i <= END_INDEX_KURS ) {
                         kursTicker(markedCells, i);
                     }
 
-                    if (i <= START_INDEX_SPECIALS && i >= END_INDEX_SPECIALS) {
+                    if (i >= START_INDEX_SPECIALS && i <= END_INDEX_SPECIALS) {
                         specialsTicker(markedCells, i);
                     }
 
-                    if (i <= START_INDEX_MARKET_CODE && i >= END_INDEX_MARKET_CODE) {
+                    if (i >= START_INDEX_MARKET_CODE && i <= END_INDEX_MARKET_CODE) {
                         marketCodeTicker(markedCells, i);
                     }
 
-                    if (i <= START_INDEX_PROGRAMM && i >= END_INDEX_PROGRAMM) {
+                    if (i >= START_INDEX_PROGRAMM && i <= END_INDEX_PROGRAMM) {
                         programmTicker(markedCells, i);
                     }
 
@@ -115,15 +116,18 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
 
 
 
-            finalizeMarketCode();
-            stake = stakeCents / 100;
+            finalizeReading();
+            stake = (double) stakeCents / 100;
         }
 
     }
 
-    private void finalizeMarketCode() {
+    private void finalizeReading() {
         for (SportwettenBettedEvent bettedEvent : bettedEvents) {
             bettedEvent.createMarketCode();
+            bettedEvent.translateKurs();
+            bettedEvent.translateProgrammTick();
+            bettedEvent.translateSpecials();
         }
     }
 
@@ -236,14 +240,39 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
                 sb.append(",kurs=").append(Arrays.toString(bettedEvent.getKurs()));
                 sb.append(",ergebnieswetteA=").append(Arrays.toString(bettedEvent.getErgebnieswetteA()));
                 sb.append(",ergebnieswetteB=").append(Arrays.toString(bettedEvent.getErgebnieswetteB()));
+                sb.append(",bank=").append(bettedEvent.isBankChecked());
 
 
             } else {
                 sb.append("{ UNCHECKED }");
             }
             sb.append("\n\n");
+            i++;
         }
         sb.append('}');
         return sb.toString();
     }
+
+    public SportwettenBettedEvent[] getBettedEvents() {
+        return bettedEvents;
+    }
+
+    public double getStake() {
+        return stake;
+    }
+
+    public void setStake(double stake) {
+        this.stake = stake;
+    }
+
+    public int getStakeCents() {
+        return stakeCents;
+    }
+
+    public void setStakeCents(int stakeCents) {
+        this.stakeCents = stakeCents;
+    }
+
+
+
 }

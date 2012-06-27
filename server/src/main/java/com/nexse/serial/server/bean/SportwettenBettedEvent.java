@@ -32,6 +32,13 @@ public class SportwettenBettedEvent {
 
         private boolean ticked;
 
+        private Integer[] programmTick;
+
+        private Integer[]  specials;
+
+        private Integer[]  kurs;
+
+
     public SportwettenBettedEvent(int offsetErgebniswetteB, int offsetErgebniswetteA, int offsetKurs, int offsetSpecials, int offsetProgramm,int offset_market_code) {
              ticked = false;
              combiChecked = false;
@@ -39,7 +46,7 @@ public class SportwettenBettedEvent {
              marketCode = "";
              ergebnisewette_A_Readed = new ArrayValueContainer(ERGENISWETTE_THICK_NUMBER,offsetErgebniswetteA);
              ergebnisewette_B_Readed = new ArrayValueContainer(ERGENISWETTE_THICK_NUMBER,offsetErgebniswetteB);
-             kurs_Readed = new ArrayValueContainer(KURS_THICK_NUMBER,offsetErgebniswetteA);
+             kurs_Readed = new ArrayValueContainer(KURS_THICK_NUMBER,offsetKurs);
              specials_Readed = new ArrayValueContainer(SPECIALS_THICK_NUMBER,offsetSpecials);
              market_code_Readed = new ArrayValueContainer(MARKET_CODE_THICK_NUMBER,offset_market_code);
              programm_Readed = new ArrayValueContainer(PROGRAMM_THICK_NUMBER,offsetProgramm);
@@ -49,7 +56,7 @@ public class SportwettenBettedEvent {
 
         if (market_code_Readed.getSettledLength() > 0) {
             StringBuilder sb = new StringBuilder();
-            for (Integer tickedIndex : programm_Readed.getAllSettledIdx()) {
+            for (Integer tickedIndex : market_code_Readed.getAllSettledIdx()) {
                 sb.append(marketCodeTranslator[tickedIndex]);
             }
 
@@ -104,10 +111,6 @@ public class SportwettenBettedEvent {
         this.ticked = true;
     }
 
-    public Integer[] getCheckedErgebnisewette_B() {
-       return  ergebnisewette_B_Readed.getAllSettledIdx();
-    }
-
     public boolean isBankChecked() {
         return bankChecked;
     }
@@ -117,7 +120,7 @@ public class SportwettenBettedEvent {
     }
 
 
-    public Integer[] getProgrammTick() {
+    public void  translateProgrammTick() {
         if (programm_Readed.getSettledLength()>0)  {
            Integer[] ret = new Integer[programm_Readed.getSettledLength()];
            int i = 0;
@@ -125,11 +128,11 @@ public class SportwettenBettedEvent {
                 ret[i] = programmTranslator[tickedIndex];
             }
 
-           return  ret;
+           programmTick =  ret;
 
 
         } else {
-            return new Integer[0];
+            programmTick = new Integer[0];
         }
 
 
@@ -141,7 +144,7 @@ public class SportwettenBettedEvent {
         return marketCode;
     }
 
-    public Integer[]  getSpecials() {
+    public void  translateSpecials() {
         if (specials_Readed.getSettledLength()>0)  {
            Integer[] ret = new Integer[specials_Readed.getSettledLength()];
            int i = 0;
@@ -149,16 +152,16 @@ public class SportwettenBettedEvent {
                 ret[i] = tickedIndex +1;
             }
 
-           return  ret;
+           specials =  ret;
 
 
         } else {
-            return new Integer[0];
+            specials = new Integer[0];
         }
 
     }
 
-    public Integer[]  getKurs() {
+    public void  translateKurs() {
             if (kurs_Readed.getSettledLength()>0)  {
                Integer[] ret = new Integer[kurs_Readed.getSettledLength()];
                int i = 0;
@@ -166,11 +169,11 @@ public class SportwettenBettedEvent {
                     ret[i] = kursTranslator[tickedIndex];
                 }
 
-               return  ret;
+               kurs =  ret;
 
 
             } else {
-                return new Integer[0];
+                kurs = new Integer[0];
             }
 
         }
@@ -184,5 +187,29 @@ public class SportwettenBettedEvent {
            return ergebnisewette_B_Readed.getAllSettledIdx();
 
        }
+
+    public Integer[] getProgrammTick() {
+        return programmTick;
+    }
+
+    public void setProgrammTick(Integer[] programmTick) {
+        this.programmTick = programmTick;
+    }
+
+    public Integer[] getSpecials() {
+        return specials;
+    }
+
+    public void setSpecials(Integer[] specials) {
+        this.specials = specials;
+    }
+
+    public Integer[] getKurs() {
+        return kurs;
+    }
+
+    public void setKurs(Integer[] kurs) {
+        this.kurs = kurs;
+    }
 }
 
