@@ -65,14 +65,15 @@
     if (window.WebSocket) {
         socket = new WebSocket("ws://10.0.0.221:9090/websocket");
         socket.onmessage = function (event) {
-            $("#marksensecarddetails").show();
-            $("#marksensecarddetails").empty();
+
 
 
             var ta = document.getElementById('responseText');
             var lr = document.getElementById('lastRead');
 
             if (event.data && event.data.indexOf("PRINTED") < 0) {
+                $("#marksensecarddetails").show();
+                           $("#marksensecarddetails").empty();
                 // dato letto
                 var markSenseCard = jQuery.parseJSON(event.data);
                 document.getElementById("schedinaContainer").style.display = "none";
