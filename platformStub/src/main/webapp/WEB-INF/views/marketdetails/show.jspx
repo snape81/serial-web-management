@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_intent_betbull_platform_stub_entity_MarketDetail" object="${marketdetail}" path="/marketdetails" z="BQqNuSwvffY0U6eitBVVy0NUfVk=">
+        <field:display field="team1" id="s_com_intent_betbull_platform_stub_entity_MarketDetail_team1" object="${marketdetail}" z="fb7kK7CAmJ/rv7idDzcgFHbipL4="/>
+        <field:display field="team2" id="s_com_intent_betbull_platform_stub_entity_MarketDetail_team2" object="${marketdetail}" z="1CLGxAw7Z308933G/LSuqVUKPqk="/>
+        <field:display field="odd_result_1" id="s_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_1" object="${marketdetail}" z="sYoOWyHq6ioKYNQD8ffkIPSMCa8="/>
+        <field:display field="odd_result_0" id="s_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_0" object="${marketdetail}" z="gbDzrV1NxQexJvsfd9ulR0JsCcY="/>
+        <field:display field="odd_result_2" id="s_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_2" object="${marketdetail}" z="9gKFNc8iOXMi4ScRxIzvO5AiVK4="/>
+    </page:show>
+</div>

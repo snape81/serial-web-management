@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_intent_betbull_platform_stub_entity_MarketDetail" modelAttribute="marketDetail" path="/marketdetails" render="${empty dependencies}" z="mADYpHlFCU8HhE5jeL8j/1/R7A4=">
+        <field:input field="code" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_code" z=""/>
+        <field:input field="team1" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_team1" z="qQYxMd2YjC3EUDvnuUo3dJXfE9Q="/>
+        <field:input field="team2" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_team2" z="jNaGypZs0Bc5yxiqlNr7S+uHsNE="/>
+        <field:input field="odd_result_1" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_1" z="1sweurilSQRVozMb8ljObWerNJ0="/>
+        <field:input field="odd_result_0" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_0" z="ZFcAPInzyhl5P04NmelS+MJALEE="/>
+        <field:input field="odd_result_2" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_2" z="oNJrizxKqk0f+CxRqUp1Fa04PfU="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_intent_betbull_platform_stub_entity_MarketDetail" render="${not empty dependencies}" z="Zay0AQHjIBidyBls23JAl2aJp4c="/>
+</div>
