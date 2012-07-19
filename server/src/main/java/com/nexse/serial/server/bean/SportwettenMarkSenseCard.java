@@ -135,7 +135,9 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
                 totalCostCent += stakeCents;
                 totalCost += stake;
             } else {
-                markSenseValid = false;
+                if (bettedEvent.isTicked()) {
+                    markSenseValid = false;
+                }
             }
 
         }
@@ -243,6 +245,7 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
         sb.append(", totalCostCent=").append(totalCostCent);
         sb.append(", totalCost=").append(totalCost);
         sb.append(", totalwinning=").append(totalwinning);
+        sb.append(", markSenseValid=").append(markSenseValid);
         sb.append(",MARKET TICKED: \n");
         int i = 0;
         for (SportwettenBettedEvent bettedEvent : bettedEvents) {

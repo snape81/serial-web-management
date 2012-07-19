@@ -24,7 +24,7 @@ public class ScannerManager {
 
     public ScannerManager(String scannerDevId, int scannerPortBaud, int scannerDataBit, int scannerStopBit, int scannerParity) throws Exception {
         this.scannerDevId = scannerDevId;
-
+        logger.info("INIT DEV ID: {}",scannerDevId);
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(scannerDevId);
         if (portIdentifier.isCurrentlyOwned()) {
             logger.error("Error: Port " + scannerDevId + " is currently in use");

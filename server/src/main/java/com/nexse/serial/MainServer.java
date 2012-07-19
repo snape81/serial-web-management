@@ -44,7 +44,7 @@ public class MainServer {
             System.exit(2);
         }
 
-        logger.debug("Initializing rest client for market details search....");
+        logger.debug("Initializing rest client for market details search with URL: {}....",portProperties.getProperty(MARKET_DETAILS_SERVER_URL));
         MarketDetailsTranslatorClient.initialize(portProperties.getProperty(MARKET_DETAILS_SERVER_URL));
         logger.debug("Initialized rest client for market details search!");
 

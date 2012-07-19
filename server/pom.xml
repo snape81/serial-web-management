@@ -87,25 +87,7 @@
     <build>
         <finalName>serial-server</finalName>
         <plugins>
-            <plugin>
-                     <artifactId>maven-remote-resources-plugin</artifactId>
-                            <version>1.2</version>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>process</goal>
-                                    </goals>
-                                    <configuration>
-                                        <resourceBundles>
-                                            <resourceBundle>
-                                                com.nexse.tools.conf.serial-web-management.conf.${deployment.env}:server-config:${project.version}
-                                            </resourceBundle>
-                                        </resourceBundles>
 
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>

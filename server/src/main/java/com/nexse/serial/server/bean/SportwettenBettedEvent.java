@@ -40,8 +40,6 @@ public class SportwettenBettedEvent {
 
         private boolean ticked;
 
-        private boolean syntaxValid; // syntaxValid if ticked programcode and kurs {0,1}
-
         private Integer[] programmTick;
 
         private Integer[]  specials;
@@ -70,7 +68,6 @@ public class SportwettenBettedEvent {
              specials_Readed = new ArrayValueContainer(SPECIALS_THICK_NUMBER,offsetSpecials);
              market_code_Readed = new ArrayValueContainer(MARKET_CODE_THICK_NUMBER,offset_market_code);
              programm_Readed = new ArrayValueContainer(PROGRAMM_THICK_NUMBER,offsetProgramm);
-             syntaxValid = programm_Readed.getSettledLength()>0 && kurs_Readed.getSettledLength()>0;
         }
 
     public void createMarketCode() {
@@ -191,9 +188,6 @@ public class SportwettenBettedEvent {
                 }
 
                kurs =  ret;
-               if (kurs.length > 1) {
-                   syntaxValid = false;
-               }
 
 
             } else {
@@ -238,7 +232,7 @@ public class SportwettenBettedEvent {
     }
 
     public boolean isSyntaxValid() {
-        return syntaxValid;
+        return marketCode != null && !marketCode.equals("") && kurs != null && kurs.length>0;
     }
 
 
@@ -271,7 +265,7 @@ public class SportwettenBettedEvent {
                         odd = md.getOdd_result_2();
                     }
                 }
-
+                presentOnDB = true;
 
             }  else {
                 logger.debug(" Scommessa non presente nello stub");
@@ -279,9 +273,10 @@ public class SportwettenBettedEvent {
             }
 
         } catch (Exception e) {
-            logger.error("errore nella traduzione dei codici ");
+            logger.error("errore nella traduzione dei codici ",e);
             presentOnDB = false;
         }
+        logger.debug("Present on DB {}",presentOnDB);
             return presentOnDB;
 
 
