@@ -19,10 +19,12 @@
                     <th>kombi</th>
                     <th>Programm</th>
                     <th>Bet Number</th>
+                    <th>Description</th>
                     <th>Specials</th>
                     <th>Kurs</th>
                     <th>Ergebniswette</th>
                     <th>bank</th>
+                    <th>odd</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -115,11 +117,12 @@
                                                 $('<td>').text(currentBettedEvent.combiChecked ? 'X' : '-'),
                                                 $('<td class="right">').text(currentBettedEvent.programmTick != '' ? currentBettedEvent.programmTick : '-'),
                                                 $('<td class="right">').text(currentBettedEvent.marketCode != '' ? currentBettedEvent.marketCode : '-'),
+                                                $('<td>').text(currentBettedEvent.presentOnDB ?(currentBettedEvent.team1 + ' vs. ' + currentBettedEvent.team2):'-'),
                                                 $('<td>').text(currentBettedEvent.specials != '' ? currentBettedEvent.specials : '-'),
                                                 $('<td>').text(currentBettedEvent.kurs != '' ? currentBettedEvent.kurs : '-'),
                                                 $('<td>').text((currentBettedEvent.ergebnieswetteA != '' ? currentBettedEvent.ergebnieswetteA : '-') + ' : ' + (currentBettedEvent.ergebnieswetteB != '' ? currentBettedEvent.ergebnieswetteB : '-')),
-                                                $('<td>').text(currentBettedEvent.bankChecked ? 'X' : '-'))
-
+                                                $('<td>').text(currentBettedEvent.bankChecked ? 'X' : '-'),
+                                                $('<td>').text(currentBettedEvent.presentOnDB ? currentBettedEvent.odd :' - ')).css({'background-color':currentBettedEvent.presentOnDB ? 'white':'red'}).css({'color':currentBettedEvent.presentOnDB ? 'black':'white'})
 
                                 )
 
@@ -127,7 +130,8 @@
                         }
 
                     }
-
+                    $("div#clone1 table#sportwetteTable").append($('<tr><td colspan="10"></td></tr>'));
+                    $("div#clone1 table#sportwetteTable").append($('<tr style="background-color:#f0ffff;"><td colspan="7" style="text-align: right;padding-right:5px"  >Total Cost <br/> Total Winning </td><td colspan="3" style="text-align: right;padding-right:5px" >'+(markSenseCard.markSenseValid ? markSenseCard.totalCost : ' - ')+' &euro;<br/>'+(markSenseCard.markSenseValid ? markSenseCard.totalwinning : ' - ')+' &euro;</td></tr>'));
                     $("#marksensecarddetails").show();
 
                 } else if (markSenseCard.typeStr == "013630") {
@@ -249,7 +253,7 @@
 </script>
 
 
-<div style="display: block; width: 600px; float: left;">
+<div style="display: block; width: auto;margin-right:15px; float: left;">
     <form onsubmit="return false;">
         <h3>Last Data Read </h3>
         <textarea readonly="readonly" id="lastRead" style="width: 600px; height:50px;"
