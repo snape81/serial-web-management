@@ -16,4 +16,6 @@ public class ConfigConstants {
     public static final String PORTS_PROPERTIES_FILE_NAME = "ports.properties";
     public static final String NEXSE_LOGO_FILE_NAME = "nexsebn.bmp";
     public static final String WEBSOCKET_PORT = "websocket.port";
+
+    public static final String MARKET_DETAILS_SERVER_URL = "url.platform.stub.marketDetails";
 }

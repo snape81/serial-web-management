@@ -1,6 +1,14 @@
 package com.nexse.serial.server.bean;
 
+import com.nexse.serial.server.detailClient.MarketDetail;
+import com.nexse.serial.server.detailClient.MarketDetailsTranslatorClient;
+import flexjson.JSONDeserializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SportwettenBettedEvent {
+    static final Logger logger = LoggerFactory.getLogger(SportwettenBettedEvent.class);
+
 
     private int[] kursTranslator = new int[]{1,0,2};
     private String[] marketCodeTranslator = new String[]{"1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
@@ -32,11 +40,23 @@ public class SportwettenBettedEvent {
 
         private boolean ticked;
 
+        private boolean syntaxValid; // syntaxValid if ticked programcode and kurs {0,1}
+
         private Integer[] programmTick;
 
         private Integer[]  specials;
 
         private Integer[]  kurs;
+
+        private String team1;
+
+        private String team2;
+
+        private float odd = 1.00F;
+
+        private boolean presentOnDB;
+
+        private float winningFloat;
 
 
     public SportwettenBettedEvent(int offsetErgebniswetteB, int offsetErgebniswetteA, int offsetKurs, int offsetSpecials, int offsetProgramm,int offset_market_code) {
@@ -50,6 +70,7 @@ public class SportwettenBettedEvent {
              specials_Readed = new ArrayValueContainer(SPECIALS_THICK_NUMBER,offsetSpecials);
              market_code_Readed = new ArrayValueContainer(MARKET_CODE_THICK_NUMBER,offset_market_code);
              programm_Readed = new ArrayValueContainer(PROGRAMM_THICK_NUMBER,offsetProgramm);
+             syntaxValid = programm_Readed.getSettledLength()>0 && kurs_Readed.getSettledLength()>0;
         }
 
     public void createMarketCode() {
@@ -170,11 +191,15 @@ public class SportwettenBettedEvent {
                 }
 
                kurs =  ret;
+               if (kurs.length > 1) {
+                   syntaxValid = false;
+               }
 
 
             } else {
                 kurs = new Integer[0];
             }
+
 
         }
 
@@ -211,5 +236,80 @@ public class SportwettenBettedEvent {
     public void setKurs(Integer[] kurs) {
         this.kurs = kurs;
     }
+
+    public boolean isSyntaxValid() {
+        return syntaxValid;
+    }
+
+
+    /*public static void main(String[] args) throws Exception {
+        MarketDetailsTranslatorClient.initialize("http://localhost:8080/stub/marketdetails/{code}");
+        String jsonRet = MarketDetailsTranslatorClient.getInstance().getMarketDetailsByCode("12ABs");
+        System.out.println("----------------------->>" + jsonRet);
+        MarketDetail md = (MarketDetail) new JSONDeserializer().use( null, MarketDetail.class ).deserialize( jsonRet );
+        System.out.println("*********************"+md);
+    }*/
+
+    public boolean expandEventFromDB() {
+        try {
+
+            String jsonRet = MarketDetailsTranslatorClient.getInstance().getMarketDetailsByCode(marketCode);
+            logger.debug(" JSON RETURNED FOR CODE {} -----> {}",marketCode,jsonRet);
+            if (jsonRet != null) {
+                MarketDetail md = (MarketDetail) new JSONDeserializer().use( null, MarketDetail.class ).deserialize( jsonRet );
+                logger.debug("MarketDetail parsed {}",md);
+                team1 = md.getTeam1();
+                team2 = md.getTeam2();
+                if (kurs.length == 0) {
+                    odd =  md.getOdd_result_1();
+                }  else {
+                    if (kurs[0] == kursTranslator[0]) {
+                        odd = md.getOdd_result_1();
+                    } else if (kurs[0] == kursTranslator[1]) {
+                        odd = md.getOdd_result_0();
+                    } else if (kurs[0] == kursTranslator[2]) {
+                        odd = md.getOdd_result_2();
+                    }
+                }
+
+
+            }  else {
+                logger.debug(" Scommessa non presente nello stub");
+                presentOnDB = false;
+            }
+
+        } catch (Exception e) {
+            logger.error("errore nella traduzione dei codici ");
+            presentOnDB = false;
+        }
+            return presentOnDB;
+
+
+
+    }
+
+    public String getTeam1() {
+        return team1;
+    }
+
+    public String getTeam2() {
+        return team2;
+    }
+
+    public float getOdd() {
+        return odd;
+    }
+
+    public boolean isPresentOnDB() {
+        return presentOnDB;
+    }
+
+    public float calculateWinningAndReturnFloat(int stakeCent) {
+
+        winningFloat = odd * stakeCent/100;
+        return winningFloat;
+    }
+
+
 }
 

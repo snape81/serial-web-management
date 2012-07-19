@@ -2,6 +2,7 @@ package com.nexse.serial;
 
 import com.nexse.serial.server.PrinterManager;
 import com.nexse.serial.server.ScannerManager;
+import com.nexse.serial.server.detailClient.MarketDetailsTranslatorClient;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
@@ -42,6 +43,10 @@ public class MainServer {
             logger.error(" FATAL --- error in reading serial ports properties  ", e);
             System.exit(2);
         }
+
+        logger.debug("Initializing rest client for market details search....");
+        MarketDetailsTranslatorClient.initialize(portProperties.getProperty(MARKET_DETAILS_SERVER_URL));
+        logger.debug("Initialized rest client for market details search!");
 
         // CREAZIONE DELLA CLASSE GESTORE DELLO SCANNER
         try {

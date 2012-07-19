@@ -1,0 +1,21 @@
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-07-12 11:14:14
+project --topLevelPackage com.intent.betbull.platform.stub
+hint
+jpa setup --database H2_IN_MEMORY --provider HIBERNATE 
+entity jpa --class com.intent.betbull.platform.stub.entity.MarketDetail 
+hint
+field string --fieldName code
+field string --fieldName team1
+field string --fieldName team2
+field number --fieldName odd_result_1 --type int 
+field number --fieldName odd_result_0 --type int 
+field number --fieldName odd_result_2 --type int 
+hint
+json all 
+hint
+hint web mvc
+help
+web mvc setup
+web mvc scaffold --class ~.entity.MarketDetail 
+web mvc scaffold --class com.intent.betbull.platform.stub.controller.MarketDetailController
+web mvc json all

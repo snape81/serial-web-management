@@ -6,9 +6,11 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
 
     private int stakeCents;
     private double stake;
+    private boolean markSenseValid = true;
 
     private int totalCostCent;
     private double totalCost;
+    private float totalwinning;
     private SportwettenBettedEvent[] bettedEvents = new SportwettenBettedEvent[10];
 
 
@@ -116,8 +118,8 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
 
 
 
-            finalizeReading();
             stake = (double) stakeCents / 100;
+            finalizeReading();
         }
 
     }
@@ -128,7 +130,17 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
             bettedEvent.translateKurs();
             bettedEvent.translateProgrammTick();
             bettedEvent.translateSpecials();
+            if (bettedEvent.isSyntaxValid() && bettedEvent.expandEventFromDB()) {
+                totalwinning += bettedEvent.calculateWinningAndReturnFloat(stakeCents);
+                totalCostCent += stakeCents;
+                totalCost += stake;
+            } else {
+                markSenseValid = false;
+            }
+
         }
+
+
     }
 
     private void specialsTicker(boolean[] markedCells, int i) {
@@ -228,6 +240,9 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
         sb.append("SportwettenMarkSenseCard");
         sb.append("{stake=").append(stake);
         sb.append(", stakeCents=").append(stakeCents);
+        sb.append(", totalCostCent=").append(totalCostCent);
+        sb.append(", totalCost=").append(totalCost);
+        sb.append(", totalwinning=").append(totalwinning);
         sb.append(",MARKET TICKED: \n");
         int i = 0;
         for (SportwettenBettedEvent bettedEvent : bettedEvents) {
@@ -241,8 +256,11 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
                 sb.append(",ergebnieswetteA=").append(Arrays.toString(bettedEvent.getErgebnieswetteA()));
                 sb.append(",ergebnieswetteB=").append(Arrays.toString(bettedEvent.getErgebnieswetteB()));
                 sb.append(",bank=").append(bettedEvent.isBankChecked());
-
-
+                sb.append(",syntaxValid=").append(bettedEvent.isSyntaxValid());
+                sb.append(",presentOnDb=").append(bettedEvent.isPresentOnDB());
+                sb.append(",team1=").append(bettedEvent.getTeam1());
+                sb.append(",team2=").append(bettedEvent.getTeam2());
+                sb.append(",odd=").append(bettedEvent.getOdd());
             } else {
                 sb.append("{ UNCHECKED }");
             }
@@ -273,6 +291,35 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
         this.stakeCents = stakeCents;
     }
 
+    public boolean isMarkSenseValid() {
+        return markSenseValid;
+    }
 
+    public void setMarkSenseValid(boolean markSenseValid) {
+        this.markSenseValid = markSenseValid;
+    }
 
+    public int getTotalCostCent() {
+        return totalCostCent;
+    }
+
+    public void setTotalCostCent(int totalCostCent) {
+        this.totalCostCent = totalCostCent;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public float getTotalwinning() {
+        return totalwinning;
+    }
+
+    public void setTotalwinning(float totalwinning) {
+        this.totalwinning = totalwinning;
+    }
 }

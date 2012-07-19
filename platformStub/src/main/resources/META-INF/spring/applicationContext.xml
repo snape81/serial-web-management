@@ -59,7 +59,7 @@
         <property name="numTestsPerEvictionRun" value="3"/>
         <property name="minEvictableIdleTimeMillis" value="1800000"/>
     </bean>
-    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager" >
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
     <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
@@ -67,4 +67,7 @@
         <property name="persistenceUnitName" value="persistenceUnit"/>
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
+    <bean class="com.intent.betbull.platform.stub.init.InitDatabaseBean" id="initDatabaseBean" init-method="init"/>
+
 </beans>

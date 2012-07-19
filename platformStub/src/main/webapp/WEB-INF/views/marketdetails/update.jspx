@@ -3,6 +3,7 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <form:update id="fu_com_intent_betbull_platform_stub_entity_MarketDetail" idField="code" modelAttribute="marketDetail" path="/marketdetails" versionField="Version" z="+SCNfa+3+ylFDWHPJmCZgcBjEY8=">
+        <field:display field="code" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_code" z="" object="${marketDetail}"/>
         <field:input field="team1" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_team1" z="qQYxMd2YjC3EUDvnuUo3dJXfE9Q="/>
         <field:input field="team2" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_team2" z="jNaGypZs0Bc5yxiqlNr7S+uHsNE="/>
         <field:input field="odd_result_1" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_1" z="1sweurilSQRVozMb8ljObWerNJ0="/>
