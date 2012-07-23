@@ -6,6 +6,7 @@ import org.springframework.roo.addon.json.RooJson;
 import org.springframework.roo.addon.tostring.RooToString;
 
 import javax.persistence.Id;
+import java.util.Date;
 
 @RooJavaBean
 @RooToString
@@ -19,6 +20,8 @@ public class MarketDetail {
     private String team1;
 
     private String team2;
+
+    private Date eventDate;
 
     private float odd_result_1;
 

@@ -3,7 +3,7 @@
 
 package com.intent.betbull.platform.stub.entity;
 
-import com.intent.betbull.platform.stub.entity.MarketDetail;
+import java.util.Date;
 
 privileged aspect MarketDetail_Roo_JavaBean {
     
@@ -29,6 +29,14 @@ privileged aspect MarketDetail_Roo_JavaBean {
     
     public void MarketDetail.setTeam2(String team2) {
         this.team2 = team2;
+    }
+    
+    public Date MarketDetail.getEventDate() {
+        return this.eventDate;
+    }
+    
+    public void MarketDetail.setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
     
     public float MarketDetail.getOdd_result_1() {

@@ -19,3 +19,4 @@ web mvc setup
 web mvc scaffold --class ~.entity.MarketDetail 
 web mvc scaffold --class com.intent.betbull.platform.stub.controller.MarketDetailController
 web mvc json all
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-07-23 14:44:18

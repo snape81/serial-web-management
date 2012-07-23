@@ -16,7 +16,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<MarketDetail, String> ApplicationConversionServiceFactoryBean.getMarketDetailToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<com.intent.betbull.platform.stub.entity.MarketDetail, java.lang.String>() {
             public String convert(MarketDetail marketDetail) {
-                return new StringBuilder().append(marketDetail.getTeam1()).append(' ').append(marketDetail.getTeam2()).append(' ').append(marketDetail.getOdd_result_1()).append(' ').append(marketDetail.getOdd_result_0()).toString();
+                return new StringBuilder().append(marketDetail.getTeam1()).append(' ').append(marketDetail.getTeam2()).append(' ').append(marketDetail.getEventDate()).append(' ').append(marketDetail.getOdd_result_1()).toString();
             }
         };
     }

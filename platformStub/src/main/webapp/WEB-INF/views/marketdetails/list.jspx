@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+
+<div xmlns:jsp="http://java.sun.com/JSP/Page"  xmlns:spring="http://www.springframework.org/tags"  xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
+    <spring:message code="marketDetail_eventdate_date_format" var="marketDetail_eventdate_date_format" htmlEscape="false" />
+
     <page:list id="pl_com_intent_betbull_platform_stub_entity_MarketDetail" items="${marketdetails}" z="FcFNnDlv4/sz/BLAsDMlT7iyqpQ=">
         <table:table data="${marketdetails}" id="l_com_intent_betbull_platform_stub_entity_MarketDetail" path="/marketdetails" typeIdFieldName="code" z="cZBBFossXaO+8uxf3pSE63Mg1uY=">
             <table:column id="c_com_intent_betbull_platform_stub_entity_MarketDetail_code" property="code" z=""/>
@@ -10,6 +13,7 @@
             <table:column id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_1" property="odd_result_1" z="63/YBeNSlwrmWDFDN9jFirBqm8A="/>
             <table:column id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_0" property="odd_result_0" z="+UzYAPVGuAWeycvHl0A/3mvXAvc="/>
             <table:column id="c_com_intent_betbull_platform_stub_entity_MarketDetail_odd_result_2" property="odd_result_2" z="mxHAvC7/jry1vjpaZ/HrIlKi6Ps="/>
+            <table:column date="true" dateTimePattern="${marketDetail_eventdate_date_format}" id="c_com_intent_betbull_platform_stub_entity_MarketDetail_eventDate" property="eventDate" z="Meu4DfENbJKfnIJfVgNnoUJFXXU="/>
         </table:table>
     </page:list>
 </div>
