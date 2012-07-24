@@ -6,6 +6,8 @@ import flexjson.JSONDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 public class SportwettenBettedEvent {
     static final Logger logger = LoggerFactory.getLogger(SportwettenBettedEvent.class);
 
@@ -55,6 +57,8 @@ public class SportwettenBettedEvent {
         private boolean presentOnDB;
 
         private float winningFloat;
+
+        public Date eventDate;
 
 
     public SportwettenBettedEvent(int offsetErgebniswetteB, int offsetErgebniswetteA, int offsetKurs, int offsetSpecials, int offsetProgramm,int offset_market_code) {
@@ -265,6 +269,7 @@ public class SportwettenBettedEvent {
                         odd = md.getOdd_result_2();
                     }
                 }
+                eventDate = md.getEventDate();
                 presentOnDB = true;
 
             }  else {
@@ -305,6 +310,12 @@ public class SportwettenBettedEvent {
         return winningFloat;
     }
 
+    public Date getEventDate() {
+        return eventDate;
+    }
 
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
 }
 

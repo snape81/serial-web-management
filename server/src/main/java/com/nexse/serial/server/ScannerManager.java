@@ -6,6 +6,7 @@ import com.nexse.serial.server.conf.ScannerCommands;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
+import com.nexse.serial.server.printer.LastMarkSenseRead;
 import com.nexse.serial.server.rxtx.SerialPortReaderThread;
 import com.nexse.serial.server.rxtx.SerialPortWriterThread;
 import gnu.io.CommPort;
@@ -105,6 +106,7 @@ public class ScannerManager {
                     logger.debug(" msc validata {} la spedisco alla websocket ", msc);
                     logger.debug(" Ejecting in good tray .... ");
                     scannerCommand.put(ScannerCommands.EJECT_IN_GOOD_TRAY_G);
+                    LastMarkSenseRead.getInstance().setCard(msc);
                 }
 
                 logger.debug(" ready for next reading !");

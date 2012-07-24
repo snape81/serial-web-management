@@ -3,9 +3,11 @@ package com.nexse.serial;
 import com.nexse.serial.server.PrinterManager;
 import com.nexse.serial.server.ScannerManager;
 import com.nexse.serial.server.detailClient.MarketDetailsTranslatorClient;
+import com.nexse.serial.server.exchange.EventIntArraylistExchange;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
+import com.nexse.serial.server.printer.SportWetteMarkSenseCardsPrinter;
 import com.nexse.serial.server.websocket.ScannerWebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ public class MainServer {
 
         EventStringExchange scannerData = new EventStringExchange();
         EventStringExchange printerDataFromWebSocket = new EventStringExchange();
+        EventIntArraylistExchange printerSportwetteData = new EventIntArraylistExchange();
 
         EventMarkSenseExchange scannerDataToWebSocket = new EventMarkSenseExchange();
 
@@ -90,10 +93,18 @@ public class MainServer {
             printerManager.startConnectionToPrinter(printerData);
             logger.debug(" connection to scanner printer ");
 
-            logger.debug("start loop printer  .... ");
+            logger.debug("start main loop printer  .... ");
             printerManager.startPrinterLoopFromWebsocket(printerDataFromWebSocket);
-                        logger.debug("loop printer started!");
+            logger.debug("loop printer started!");
 
+            logger.debug("init sportwette printer facility  .... ");
+            SportWetteMarkSenseCardsPrinter.initialize(printerSportwetteData);
+            logger.debug("init sportwette printer facility completed ");
+
+
+            logger.debug("start sportwettw loop printer  .... ");
+            printerManager.startSportwettePrinterLoopFromWebsocket(printerSportwetteData);
+            logger.debug("loop sportwettw started!");
 
 
         } catch (Exception e) {

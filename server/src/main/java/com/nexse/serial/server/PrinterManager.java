@@ -1,6 +1,7 @@
 package com.nexse.serial.server;
 
 import com.nexse.serial.server.conf.PrinterCommands;
+import com.nexse.serial.server.exchange.EventIntArraylistExchange;
 import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
 import com.nexse.serial.server.rxtx.PrinterSerialPortWriterThread;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class PrinterManager {
     static final Logger logger = LoggerFactory.getLogger(PrinterManager.class);
@@ -100,6 +102,9 @@ public class PrinterManager {
          new Thread(new MainPrinterLoop(dataToPrintFromWebsocket)).start();
     }
 
+    public void startSportwettePrinterLoopFromWebsocket(EventIntArraylistExchange exchange) {
+            new Thread(new SportwettePrinterLoop(exchange)).start();
+       }
 
     private class MainPrinterLoop implements Runnable {
 
@@ -125,6 +130,30 @@ public class PrinterManager {
         }
     }
 
+    private class SportwettePrinterLoop implements Runnable {
+
+
+            private EventIntArraylistExchange dataToPrintFromPrinterFacility;
+
+            private SportwettePrinterLoop( EventIntArraylistExchange dataToPrintFromPrinterFacility) {
+                this.dataToPrintFromPrinterFacility = dataToPrintFromPrinterFacility;
+            }
+
+            @Override
+            public void run() {
+                while (true) {
+                    logger.debug("In attesa di una schedina  da stampare .... ");
+                    // ciclo infinito di attesa di ricezione dati
+                    ArrayList<Integer> mess = dataToPrintFromPrinterFacility.get();
+                    logger.debug(" PRINTER deve stampare num byte {}", mess.size());
+                    printArray(mess);
+                    logger.debug(" ready for next printing !");
+
+
+                }
+            }
+        }
+
     public void loadLogoNexseFromReasources(int numLogo,String filename) {
            InputStream inLogo = ClassLoader.getSystemResourceAsStream(filename);
            logger.debug("IN logo  input stream {}",inLogo);
@@ -148,4 +177,10 @@ public class PrinterManager {
         }
 
        }
+
+    public void printArray(ArrayList<Integer> toPrint) {
+        for (int integer : toPrint) {
+           printerCommand.put(integer);
+        }
+    }
 }

@@ -38,7 +38,7 @@
 
 
     var socket;
-
+    var markSenseCard;
     var PRE_RIGA_VUOTA = '<div id="row';
 
     var POST_RIGA_VUOTA = '" class="row">' +
@@ -73,11 +73,11 @@
             var ta = document.getElementById('responseText');
             var lr = document.getElementById('lastRead');
 
-            if (event.data && event.data.indexOf("PRINTED") < 0) {
+            if (event.data && event.data.indexOf("Printing Result") < 0) {
                 $("#marksensecarddetails").show();
                            $("#marksensecarddetails").empty();
                 // dato letto
-                var markSenseCard = jQuery.parseJSON(event.data);
+                markSenseCard = jQuery.parseJSON(event.data);
                 document.getElementById("schedinaContainer").style.display = "none";
                 // $("#schedinaContainer").removeClass("schedinawette");
                 // $("#schedinaContainer").removeClass("schedina2");
@@ -87,9 +87,7 @@
 
                 if (document.getElementById('autoprint').checked == true) {
 
-                    if (!markSenseCard.empty) {
-                        send(markSenseCard.rawString);
-                    }
+                    print();
 
                 }
 
@@ -208,6 +206,26 @@
         alert("Your browser does not support Web Socket.");
     }
 
+    function print() {
+        var ta = document.getElementById('responseText');
+        if (!markSenseCard.empty) {
+            if (markSenseCard.typeStr == "013E30") {
+                if (markSenseCard.valid) {
+                    send("SPORTWETTE");
+
+                } else {
+                    ta.value = ta.value + '\n' + " INVALID SPORTWETTEN MARKSENSE CARD";
+                }
+
+
+            } else {
+                send(markSenseCard.rawString);
+            }
+        } else {
+            ta.value = ta.value + '\n' + " EMPTY MARKSENSECARD";
+        }
+    }
+
     function send(message) {
         if (!window.WebSocket) {
             return;
@@ -259,7 +277,7 @@
         <textarea readonly="readonly" id="lastRead" style="width: 600px; height:50px;"
                   name="message"></textarea><br/><br/>
 
-        <input type="button" value="PRINT" onclick="send(this.form.message.value)"/>
+        <input type="button" value="PRINT" onclick="print();"/>
         Automatic print: <input type="checkbox" name="autoprint" id="autoprint"/>
 
         <h3>Log AREA</h3>

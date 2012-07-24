@@ -18,6 +18,7 @@ package com.nexse.serial.server.websocket;
 import com.nexse.serial.server.bean.MarkSenseCard;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
+import com.nexse.serial.server.printer.SportWetteMarkSenseCardsPrinter;
 import flexjson.JSONSerializer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -124,8 +125,23 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
         // Send the uppercase string back.
         String request = ((TextWebSocketFrame) frame).getText();
         logger.debug("Channel {} received {}", ctx.getChannel().getId(), request);
-        dataToPrint.put(request);
-        ctx.getChannel().write(new TextWebSocketFrame("PRINTED --> " + request));
+
+        String result = "Printing Result: ";
+        if (request.contains("SPORTWETTE")) {
+            try {
+                result += SportWetteMarkSenseCardsPrinter.getInstance().printMarkSenseCard();
+            } catch (Exception e) {
+                result += "Mark Sense Card Printing Error: " + e.getMessage();
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        } else {
+            result += "unknown card's printing map. Now Printing only raw string ";
+            dataToPrint.put(request);
+        }
+
+
+        //ctx.getChannel().write(new TextWebSocketFrame("PRINTED --> " + request));
+        ctx.getChannel().write(new TextWebSocketFrame(result));
     }
 
 
