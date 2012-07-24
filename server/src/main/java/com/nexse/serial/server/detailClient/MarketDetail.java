@@ -1,11 +1,15 @@
 package com.nexse.serial.server.detailClient;
 
+import java.util.Date;
+
 public class MarketDetail {
     private String code;
 
         private String team1;
 
         private String team2;
+
+        private Date eventDate;
 
         private float odd_result_1;
 
@@ -61,6 +65,14 @@ public class MarketDetail {
         this.odd_result_2 = odd_result_2;
     }
 
+    public Date getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -68,6 +80,7 @@ public class MarketDetail {
         sb.append("{code='").append(code).append('\'');
         sb.append(", team1='").append(team1).append('\'');
         sb.append(", team2='").append(team2).append('\'');
+        sb.append(", eventDate='").append(eventDate).append('\'');
         sb.append(", odd_result_1=").append(odd_result_1);
         sb.append(", odd_result_0=").append(odd_result_0);
         sb.append(", odd_result_2=").append(odd_result_2);
