@@ -57,7 +57,7 @@ public class InitDatabaseBean {
 
         MarketDetail m5 = new MarketDetail();
                         m5.setCode("2C");
-                        m5.setTeam1("ngolstadt"); m5.setTeam2("1.FC K`lautern");
+                        m5.setTeam1("ngolstadtv"); m5.setTeam2("1.FC K`lautern");
         m5.setEventDate(sdf.parse("26/10/2012 20:45:00"));
                         m5.setOdd_result_0(1.30F);
                         m5.setOdd_result_1(3.10F);
