@@ -13,13 +13,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.nexse.serial.server.websocket;
+package com.nexse.serial.server.websocket.timing;
 
 import com.nexse.serial.server.bean.MarkSenseCard;
-import com.nexse.serial.server.exchange.EventMarkSenseExchange;
-import com.nexse.serial.server.exchange.EventStringExchange;
-import com.nexse.serial.server.printer.SportWetteMarkSenseCardsPrinter;
+import com.nexse.serial.server.timing.ConvertToPrintable;
+import com.nexse.serial.server.timing.TimeBeanForPrint;
 import com.nexse.serial.server.timing.TimingArchive;
+import com.nexse.serial.server.websocket.WebSocketServerIndexPage;
 import flexjson.JSONSerializer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -33,6 +33,8 @@ import org.jboss.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.setContentLength;
@@ -43,22 +45,13 @@ import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 /**
  * Handles handshakes and messages
  */
-public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
-    static final Logger logger = LoggerFactory.getLogger(WebSocketServerHandler.class);
-    private EventMarkSenseExchange dataRead;
-    private EventStringExchange dataToPrint;
+public class TimingSocketServerHandler extends SimpleChannelUpstreamHandler {
+    static final Logger logger = LoggerFactory.getLogger(TimingSocketServerHandler.class);
 
-    private static final String WEBSOCKET_PATH = "/websocket";
+
+    private static final String WEBSOCKET_PATH = "/timingsocket";
 
     private WebSocketServerHandshaker handshaker;
-
-    private Thread writingThread;
-
-    public WebSocketServerHandler(EventMarkSenseExchange dataRead, EventStringExchange dataToPrint) {
-        this.dataRead = dataRead;
-        this.dataToPrint = dataToPrint;
-
-    }
 
 
     @Override
@@ -125,23 +118,19 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
 
         // Send the uppercase string back.
         String request = ((TextWebSocketFrame) frame).getText();
+        String result = null;
         //logger.debug("Channel {} received {}", ctx.getChannel().getId(), request);
-
-        String result = "Printing Result: ";
-        if (request.contains("SPORTWETTE")) {
-            try {
-                TimingArchive.getCurrent().setReceivedPrintingCommandByWebSocket();
-                String bscode = SportWetteMarkSenseCardsPrinter.getInstance().printMarkSenseCard();
-                TimingArchive.getCurrent().setExecutedPrintingCommandByWebSocket();
-                result += bscode;
-                TimingArchive.storeResult(bscode);
-            } catch (Exception e) {
-                result += "Mark Sense Card Printing Error: " + e.getMessage();
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        if (request.contains("TIMING")) {
+            JSONSerializer serializer = new JSONSerializer();
+            List<TimeBeanForPrint> timeBeanForPrints = ConvertToPrintable.convert();
+            if (timeBeanForPrints != null && !timeBeanForPrints.isEmpty()) {
+                result = serializer.deepSerialize(ConvertToPrintable.convert());
+            } else {
+                result = "EMPTY";
             }
         } else {
-            result += "unknown card's printing map. Now Printing only raw string ";
-            dataToPrint.put(request);
+            TimingArchive.refreshALL();
+            result ="CLEAN";
         }
 
 
@@ -189,63 +178,19 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
     }
 
 
-    private class WaitAndWriteScannerString implements Runnable {
-        final Logger logger = LoggerFactory.getLogger(WaitAndWriteScannerString.class);
-
-        private Channel chl;
-
-
-        WaitAndWriteScannerString(Channel chl) {
-            this.chl = chl;
-        }
-
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-
-                    // ciclo infinito di attesa di ricezione dati
-
-
-                    MarkSenseCard mess = dataRead.get();
-                    TimingArchive.getCurrent().setScannerDataReadedByWebSocket();
-                    //logger.debug(" Il server websocket ha letto la mark sense card {}", mess);
-                    String jsonSerialization = getJsonString(mess);
-                    TimingArchive.getCurrent().setAfterJsonSerialization();
-                    //logger.debug(" JSON: {}", jsonSerialization);
-                    if (chl != null && chl.isOpen()) {
-                        chl.write(new TextWebSocketFrame(jsonSerialization));
-                        TimingArchive.getCurrent().setAfterSendOnTheChannel();
-                    } else {
-                        logger.error(" Context e' null il messaggio " + mess + " e' stato scartato");
-                    }
-                } catch (InterruptedException e) {
-                    //logger.debug("INTERRUPTED!!!! ");
-                    return;
-                }
-            }
-
-        }
-
-
-    }
-
     @Override
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         //logger.debug("DISCONNECTED {} ", this.toString());
-        this.writingThread.interrupt();
 
-        //logger.debug("Thread to kill {}", this.writingThread);
         super.channelDisconnected(ctx, e);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
 
     private class MyChannelFutureListener implements ChannelFutureListener {
 
-        private WebSocketServerHandler handler;
+        private TimingSocketServerHandler handler;
 
-        private MyChannelFutureListener(WebSocketServerHandler handler) {
+        private MyChannelFutureListener(TimingSocketServerHandler handler) {
             this.handler = handler;
         }
 
@@ -254,16 +199,9 @@ public class WebSocketServerHandler extends SimpleChannelUpstreamHandler {
         public void operationComplete(ChannelFuture future) throws Exception {
             if (!future.isSuccess()) {
                 Channels.fireExceptionCaught(future.getChannel(), future.getCause());
-            } else {
-                //logger.debug("CLASS {} STARTING WRITING THREAD ON CHANNEL {}", this.toString(), future.getChannel());
-                Thread myNewWritingThread = new Thread(new WaitAndWriteScannerString(future.getChannel()));
-                handler.setWritingThread(myNewWritingThread);
-                myNewWritingThread.start();
             }
         }
     }
 
-    public void setWritingThread(Thread writingThread) {
-        this.writingThread = writingThread;
-    }
+
 }

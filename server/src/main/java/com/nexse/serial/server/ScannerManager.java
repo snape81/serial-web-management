@@ -9,6 +9,7 @@ import com.nexse.serial.server.exchange.EventStringExchange;
 import com.nexse.serial.server.printer.LastMarkSenseRead;
 import com.nexse.serial.server.rxtx.SerialPortReaderThread;
 import com.nexse.serial.server.rxtx.SerialPortWriterThread;
+import com.nexse.serial.server.timing.TimingArchive;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -45,15 +46,15 @@ public class ScannerManager {
 
 
     public void startConnectionToScanner(EventIntExchange commandToSend) throws IOException {
-        logger.debug(" Starting writing thread .... ");
+        //logger.debug(" Starting writing thread .... ");
         new Thread(new SerialPortWriterThread(scannerDevId, scannerSerialPort.getOutputStream(), commandToSend)).start();
-        logger.debug(" Writing thread started .... ");
+        //logger.debug(" Writing thread started .... ");
     }
 
     public void startConnectionFromScanner(EventStringExchange dataToRead) throws IOException {
-        logger.debug(" Starting reading thread .... ");
+        //logger.debug(" Starting reading thread .... ");
         new Thread(new SerialPortReaderThread(scannerDevId, scannerSerialPort.getInputStream(), dataToRead)).start();
-        logger.debug(" Reading thread started .... ");
+        //logger.debug(" Reading thread started .... ");
     }
 
 
@@ -64,7 +65,7 @@ public class ScannerManager {
 
     private MarkSenseCard validaLetturaECreaSchedina(String rawDataFromScanner) {
         MarkSenseCard msc = MarkSenseCardFactory.getMscFromString(rawDataFromScanner);
-        logger.debug("Mark sense generata {}",msc);
+      //logger.debug("Mark sense generata {}",msc);
         return msc;
     }
 
@@ -89,27 +90,34 @@ public class ScannerManager {
             while (true) {
                 // ciclo infinito di attesa di ricezione dati
                 String mess = scannerData.get();
-                logger.debug(" SCANNER READER ha letto {}", mess);
+                TimingArchive.getCurrent().setScannerReadCompleted();
+               //logger.debug(" SCANNER READER ha letto {}", mess);
                 MarkSenseCard msc = validaLetturaECreaSchedina(mess);
+                TimingArchive.getCurrent().setReadValidationCompleted();
+
                 scannerDataToWebSocket.put(msc);
+
+                TimingArchive.getCurrent().setAfterTransferringToWebsocketBuffer();
                 if (!msc.isValid()) {
-                    logger.debug(" lettura errata dallo scanner", msc.getRow());
-                    logger.debug(" Ejecting in bad tray .... ");
+                    //logger.debug(" lettura errata dallo scanner", msc.getRow());
+                    //logger.debug(" Ejecting in bad tray .... ");
                     scannerCommand.put(ScannerCommands.EJECT_IN_BAD_TRAY_S);
                 }
 
                 if (msc.isEmpty()) {
-                    logger.debug(" msc vuota ", msc.getRow());
-                    logger.debug(" Ejecting in bad tray .... ");
+             //logger.debug(" msc vuota ", msc.getRow());
+                    //logger.debug(" Ejecting in bad tray .... ");
                     scannerCommand.put(ScannerCommands.EJECT_IN_BAD_TRAY_S);
                 } else {
-                    logger.debug(" msc validata {} la spedisco alla websocket ", msc);
-                    logger.debug(" Ejecting in good tray .... ");
+                   //logger.debug(" msc validata {} la spedisco alla websocket ", msc);
+                    //logger.debug(" Ejecting in good tray .... ");
+                    TimingArchive.getCurrent().setPreRejectInGoodTray();
                     scannerCommand.put(ScannerCommands.EJECT_IN_GOOD_TRAY_G);
                     LastMarkSenseRead.getInstance().setCard(msc);
+                    TimingArchive.getCurrent().setAfterRejectInGoodTray();
                 }
 
-                logger.debug(" ready for next reading !");
+                //logger.debug(" ready for next reading !");
 
 
             }

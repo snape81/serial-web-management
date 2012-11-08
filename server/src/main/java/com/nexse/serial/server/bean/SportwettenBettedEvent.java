@@ -12,51 +12,51 @@ public class SportwettenBettedEvent {
     static final Logger logger = LoggerFactory.getLogger(SportwettenBettedEvent.class);
 
 
-    private int[] kursTranslator = new int[]{1,0,2};
-    private String[] marketCodeTranslator = new String[]{"1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
-    private int[] programmTranslator = new int[]{1000,100,10,1};
+    public int[] kursTranslator = new int[]{1,0,2};
+    public String[] marketCodeTranslator = new String[]{"1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
+    public int[] programmTranslator = new int[]{1000,100,10,1};
 
-        private static final int ERGENISWETTE_THICK_NUMBER = 7;
-        private static final int SPECIALS_THICK_NUMBER = 7;
-        private static final int KURS_THICK_NUMBER = 3;
-        private static final int PROGRAMM_THICK_NUMBER = 4;
-        private static final int MARKET_CODE_THICK_NUMBER = 15;
+        public static final int ERGENISWETTE_THICK_NUMBER = 7;
+        public static final int SPECIALS_THICK_NUMBER = 7;
+        public static final int KURS_THICK_NUMBER = 3;
+        public static final int PROGRAMM_THICK_NUMBER = 4;
+        public static final int MARKET_CODE_THICK_NUMBER = 15;
 
-        private ArrayValueContainer ergebnisewette_A_Readed;
+        public ArrayValueContainer ergebnisewette_A_Readed;
 
-        private ArrayValueContainer ergebnisewette_B_Readed;
+        public ArrayValueContainer ergebnisewette_B_Readed;
 
-        private ArrayValueContainer kurs_Readed;
+        public ArrayValueContainer kurs_Readed;
 
-        private ArrayValueContainer specials_Readed;
+        public ArrayValueContainer specials_Readed;
 
-        private ArrayValueContainer market_code_Readed;
+        public ArrayValueContainer market_code_Readed;
 
-        private ArrayValueContainer programm_Readed;
+        public ArrayValueContainer programm_Readed;
 
-        private String marketCode;
+        public String marketCode;
 
-        private boolean combiChecked;
+        public boolean combiChecked;
 
-        private boolean bankChecked;
+        public boolean bankChecked;
 
-        private boolean ticked;
+        public boolean ticked;
 
-        private Integer[] programmTick;
+        public Integer[] programmTick;
 
-        private Integer[]  specials;
+        public Integer[]  specials;
 
-        private Integer[]  kurs;
+        public Integer[]  kurs;
 
-        private String team1;
+        public String team1;
 
-        private String team2;
+        public String team2;
 
-        private float odd = 1.00F;
+        public float odd = 1.00F;
 
-        private boolean presentOnDB;
+        public boolean presentOnDB;
 
-        private float winningFloat;
+        public float winningFloat;
 
         public Date eventDate;
 
@@ -252,10 +252,10 @@ public class SportwettenBettedEvent {
         try {
 
             String jsonRet = MarketDetailsTranslatorClient.getInstance().getMarketDetailsByCode(marketCode);
-            logger.debug(" JSON RETURNED FOR CODE {} -----> {}",marketCode,jsonRet);
+            //logger.debug(" JSON RETURNED FOR CODE {} -----> {}",marketCode,jsonRet);
             if (jsonRet != null) {
                 MarketDetail md = (MarketDetail) new JSONDeserializer().use( null, MarketDetail.class ).deserialize( jsonRet );
-                logger.debug("MarketDetail parsed {}",md);
+                //logger.debug("MarketDetail parsed {}",md);
                 team1 = md.getTeam1();
                 team2 = md.getTeam2();
                 if (kurs.length == 0) {
@@ -273,7 +273,7 @@ public class SportwettenBettedEvent {
                 presentOnDB = true;
 
             }  else {
-                logger.debug(" Scommessa non presente nello stub");
+                //logger.debug(" Scommessa non presente nello stub");
                 presentOnDB = false;
             }
 
@@ -281,7 +281,7 @@ public class SportwettenBettedEvent {
             logger.error("errore nella traduzione dei codici ",e);
             presentOnDB = false;
         }
-        logger.debug("Present on DB {}",presentOnDB);
+        //logger.debug("Present on DB {}",presentOnDB);
             return presentOnDB;
 
 

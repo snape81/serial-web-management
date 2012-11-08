@@ -67,8 +67,8 @@ public class ScannerWebSocketServer {
         // Bind and start to accept incoming connections.
         bootstrap.bind(new InetSocketAddress(port));
 
-        logger.debug("Web socket server started at port {} .", port);
-        logger.debug("Open your browser and navigate to http://localhost: {}/ ", port);
+        //logger.debug("Web socket server started at port {} .", port);
+        //logger.debug("Open your browser and navigate to http://localhost: {}/ ", port);
     }
 
 

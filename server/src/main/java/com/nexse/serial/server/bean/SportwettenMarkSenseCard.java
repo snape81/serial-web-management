@@ -1,5 +1,7 @@
 package com.nexse.serial.server.bean;
 
+import com.nexse.serial.server.timing.TimingArchive;
+
 import java.util.Arrays;
 
 public class SportwettenMarkSenseCard extends MarkSenseCard {
@@ -63,13 +65,16 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
 
     public SportwettenMarkSenseCard(String rawDataFromScanner, Boolean valid) {
         super(rawDataFromScanner, valid, MarkSenseCard.TYPE_SPORTWETTEN);
+        TimingArchive.getCurrent().setPostSuperclassSportwetteInstantiation();
         setTypeId(MarkSenseCard.TYPE_SPORTWETTEN);
 
+        TimingArchive.getCurrent().setPreBettedEventsCreation();
         for (int i = 0; i < bettedEvents.length; i++) {
             bettedEvents[i] = new SportwettenBettedEvent(OFFSET_ERGEBNISWETTE_B, OFFSET_ERGEBNISWETTE_A, OFFSET_KURS, OFFSET_SPECIALS, OFFSET_PROGRAMM, OFFSET_MARKET_CODE);
         }
+        TimingArchive.getCurrent().setPostBettedEventsCreation();
 
-
+        TimingArchive.getCurrent().setPreSemanticCalc();
         if (isValid()) {
             for (int i = START_SPORTWETTEN_GENERAL_INDEX; i <= END_SPORTWETTEN_GENERAL_INDEX; i++) {
                 if (getListaRighe().containsKey(i)) {
@@ -115,11 +120,14 @@ public class SportwettenMarkSenseCard extends MarkSenseCard {
 
                 }
             }
-
+            TimingArchive.getCurrent().setPostSemanticCalc();
 
 
             stake = (double) stakeCents / 100;
+            TimingArchive.getCurrent().setPreFinalizeReading();
             finalizeReading();
+            TimingArchive.getCurrent().setPostFinalizingReading();
+
         }
 
     }

@@ -33,9 +33,9 @@ public class MarketDetailsTranslatorClient {
 
     public String getMarketDetailsByCode(String code) {
         try {
-            logger.debug(" Searching for market with code : {}  ............",code);
+          //logger.debug(" Searching for market with code : {}  ............",code);
           ResponseEntity<String> responseEntity = restClient.getForEntity(url,String.class,code);
-            logger.debug(" MarketDetails found: {} ",responseEntity.getBody() );
+         //logger.debug(" MarketDetails found: {} ",responseEntity.getBody() );
             return responseEntity.getBody();
 
         } catch (RestClientException e) {

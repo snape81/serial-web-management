@@ -1,5 +1,7 @@
 package com.nexse.serial.server.bean;
 
+import com.nexse.serial.server.timing.TimingArchive;
+
 public class MarkSenseCardFactory {
     public static final String  RAW_VALUE_SPORTWETTE_CARD = "013E30";
      public static final String RAW_VALUE_SCHEDINA2_CARD = "013630";
@@ -14,7 +16,9 @@ public class MarkSenseCardFactory {
           return new MarkSenseCard(rawDataFromScanner,Boolean.FALSE,MarkSenseCard.TYPE_UNKNOWNTYPE);
         }
         if (rawDataFromScanner.startsWith(RAW_VALUE_SPORTWETTE_CARD)) {
+            TimingArchive.getCurrent().setPreSportwettenInstantiation();
             return new SportwettenMarkSenseCard(rawDataFromScanner,Boolean.TRUE);
+
         } else {
             return new MarkSenseCard(rawDataFromScanner,Boolean.TRUE,MarkSenseCard.TYPE_UNKNOWNTYPE);
         }

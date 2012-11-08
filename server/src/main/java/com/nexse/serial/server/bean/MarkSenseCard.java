@@ -1,5 +1,7 @@
 package com.nexse.serial.server.bean;
 
+import com.nexse.serial.server.timing.TimingArchive;
+
 import java.util.HashMap;
 
 public class MarkSenseCard {
@@ -16,6 +18,7 @@ public class MarkSenseCard {
     private int typeId;
 
     public MarkSenseCard(String rawDataFromScanner,Boolean validread,int typeID) {
+        TimingArchive.getCurrent().setPreSuperclassSportwetteInstantiation();
 
 
         this.typeId = typeID;

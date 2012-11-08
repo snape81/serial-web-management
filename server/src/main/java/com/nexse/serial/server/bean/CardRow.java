@@ -46,7 +46,7 @@ public class CardRow {
     }
 
     public CardRow(String rawString) {
-        logger.debug(" Instantiating card row from rwastring {}" ,rawString);
+        //logger.debug(" Instantiating card row from rwastring {}" ,rawString);
         this.rawString = rawString;
         this.rowIndex = Integer.parseInt(rawString.substring(START_INDEX_ROW_NUM,END_INDEX_ROW_NUM));
         int wholeRow = Integer.parseInt(rawString.substring(START_INDEX_DATA),16);

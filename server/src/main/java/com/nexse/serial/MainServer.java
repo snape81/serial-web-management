@@ -8,7 +8,9 @@ import com.nexse.serial.server.exchange.EventIntExchange;
 import com.nexse.serial.server.exchange.EventMarkSenseExchange;
 import com.nexse.serial.server.exchange.EventStringExchange;
 import com.nexse.serial.server.printer.SportWetteMarkSenseCardsPrinter;
+import com.nexse.serial.server.timing.TimingArchive;
 import com.nexse.serial.server.websocket.ScannerWebSocketServer;
+import com.nexse.serial.server.websocket.timing.TimingWebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +38,7 @@ public class MainServer {
         PrinterManager printerManager = null;
 
         // LETTURA DELLE PROPERTIES DA FILE
-        logger.debug(" starting reading properties from file  ... " + PORTS_PROPERTIES_FILE_NAME);
+        //logger.debug(" starting reading properties from file  ... " + PORTS_PROPERTIES_FILE_NAME);
         Properties portProperties = new Properties();
         try {
             portProperties.load(ClassLoader.class.getResourceAsStream("/" + PORTS_PROPERTIES_FILE_NAME));
@@ -47,65 +49,68 @@ public class MainServer {
             System.exit(2);
         }
 
-        logger.debug("Initializing rest client for market details search with URL: {}....",portProperties.getProperty(MARKET_DETAILS_SERVER_URL));
+        //logger.debug("Initializing rest client for market details search with URL: {}....",portProperties.getProperty(MARKET_DETAILS_SERVER_URL));
         MarketDetailsTranslatorClient.initialize(portProperties.getProperty(MARKET_DETAILS_SERVER_URL));
-        logger.debug("Initialized rest client for market details search!");
+        //logger.debug("Initialized rest client for market details search!");
 
         // CREAZIONE DELLA CLASSE GESTORE DELLO SCANNER
         try {
-            logger.debug(" start instantiate rxtx scanner utility ---> SCANNER ");
+            //logger.debug(" start instantiate rxtx scanner utility ---> SCANNER ");
             scannerManager = new ScannerManager(portProperties.getProperty(SCANNER_PORT_DEVICE_ID),
                     new Integer(portProperties.getProperty(SCANNER_PORT_BAUD_RATE)),
                     new Integer(portProperties.getProperty(SCANNER_PORT_DATA_BIT)),
                     new Integer(portProperties.getProperty(SCANNER_PORT_STOP_BIT)),
                     new Integer(portProperties.getProperty(SCANNER_PORT_PARITY)));
-            logger.debug("  instantiate rxtx scanner utility completed ---> SCANNER");
+            //logger.debug("  instantiate rxtx scanner utility completed ---> SCANNER");
 
-            logger.debug(" start instantiate rxtx printer utility ---> PRINTER");
+            //logger.debug(" start instantiate rxtx printer utility ---> PRINTER");
             printerManager = new PrinterManager(portProperties.getProperty(PRINTER_PORT_DEVICE_ID),
                     new Integer((String) portProperties.get(PRINTER_PORT_BAUD_RATE)),
                     new Integer((String) portProperties.get(PRINTER_PORT_DATA_BIT)),
                     new Integer((String) portProperties.get(PRINTER_PORT_STOP_BIT)),
                     new Integer((String) portProperties.get(PRINTER_PORT_PARITY)),printerData);
-            logger.debug("  instantiate rxtx scanner utility completed ---> PRINTER");
+            //logger.debug("  instantiate rxtx scanner utility completed ---> PRINTER");
 
 
-            logger.debug(" start open connection to scanner  ....  ");
+            //logger.debug(" start open connection to scanner  ....  ");
             scannerManager.startConnectionToScanner(scannerCommand);
-            logger.debug(" connection to scanner opened ");
+            //logger.debug(" connection to scanner opened ");
 
-            logger.debug(" start open connection from scanner  ....  ");
+            //logger.debug(" start open connection from scanner  ....  ");
             scannerManager.startConnectionFromScanner(scannerData);
-            logger.debug(" connection from scanner opened ");
-            logger.debug("init bitmask fashion reading ... ");
+            //logger.debug(" connection from scanner opened ");
+            //logger.debug("init bitmask fashion reading ... ");
             scannerManager.initScannerWithBitmaskReading(scannerCommand);
-            logger.debug(" ... reding initialized");
+            //logger.debug(" ... reding initialized");
 
             ScannerWebSocketServer swss = new ScannerWebSocketServer(new Integer( portProperties.getProperty(WEBSOCKET_PORT)),scannerDataToWebSocket,printerDataFromWebSocket);
             swss.run();
 
-            logger.debug("start loop scanner reading  .... ");
+            TimingWebSocketServer twss = new TimingWebSocketServer(9091);
+            twss.run();
+
+            //logger.debug("start loop scanner reading  .... ");
             scannerManager.startReaderLoopFromScanner(scannerCommand,scannerData,scannerDataToWebSocket);
-            logger.debug("loop scanner reading started!");
+            //logger.debug("loop scanner reading started!");
 
 
-            logger.debug(" start open connection to printer  ....  ");
+            //logger.debug(" start open connection to printer  ....  ");
             printerManager.startConnectionToPrinter(printerData);
-            logger.debug(" connection to scanner printer ");
+            //logger.debug(" connection to scanner printer ");
 
-            logger.debug("start main loop printer  .... ");
+            //logger.debug("start main loop printer  .... ");
             printerManager.startPrinterLoopFromWebsocket(printerDataFromWebSocket);
-            logger.debug("loop printer started!");
+            //logger.debug("loop printer started!");
 
-            logger.debug("init sportwette printer facility  .... ");
+            //logger.debug("init sportwette printer facility  .... ");
             SportWetteMarkSenseCardsPrinter.initialize(printerSportwetteData);
-            logger.debug("init sportwette printer facility completed ");
+            //logger.debug("init sportwette printer facility completed ");
 
 
-            logger.debug("start sportwettw loop printer  .... ");
+            //logger.debug("start sportwettw loop printer  .... ");
             printerManager.startSportwettePrinterLoopFromWebsocket(printerSportwetteData);
-            logger.debug("loop sportwettw started!");
-
+            //logger.debug("loop sportwettw started!");
+            TimingArchive.renewCurrent();
 
         } catch (Exception e) {
             logger.error(" errore nell'apertura del manager dello scanner ", e);

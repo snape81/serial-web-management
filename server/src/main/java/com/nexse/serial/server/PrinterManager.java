@@ -11,9 +11,7 @@ import gnu.io.SerialPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class PrinterManager {
@@ -45,9 +43,9 @@ public class PrinterManager {
 
 
     public void startConnectionToPrinter(EventIntExchange commandToSend) throws IOException {
-        logger.debug(" Starting writing thread .... ");
+        //logger.debug(" Starting writing thread .... ");
         new Thread(new PrinterSerialPortWriterThread(printerDevId, printerSerialPort.getOutputStream(), commandToSend)).start();
-        logger.debug(" Writing thread started .... ");
+        //logger.debug(" Writing thread started .... ");
     }
 
 
@@ -118,12 +116,12 @@ public class PrinterManager {
         @Override
         public void run() {
             while (true) {
-                logger.debug("In attesa di una stringa da stampare .... ");
+            //logger.debug("In attesa di una stringa da stampare .... ");
                 // ciclo infinito di attesa di ricezione dati
                 String mess = dataToPrintFromWebsocket.get();
-                logger.debug(" PRINTER deve stampare {}", mess);
+            //logger.debug(" PRINTER deve stampare {}", mess);
                 printAWebsocketMessage(mess);
-                logger.debug(" ready for next printing !");
+            //logger.debug(" ready for next printing !");
 
 
             }
@@ -142,41 +140,19 @@ public class PrinterManager {
             @Override
             public void run() {
                 while (true) {
-                    logger.debug("In attesa di una schedina  da stampare .... ");
+                   //logger.debug("In attesa di una schedina  da stampare .... ");
                     // ciclo infinito di attesa di ricezione dati
                     ArrayList<Integer> mess = dataToPrintFromPrinterFacility.get();
-                    logger.debug(" PRINTER deve stampare num byte {}", mess.size());
+                    //logger.debug(" PRINTER deve stampare num byte {}", mess.size());
                     printArray(mess);
-                    logger.debug(" ready for next printing !");
+                    //logger.debug(" ready for next printing !");
 
 
                 }
             }
         }
 
-    public void loadLogoNexseFromReasources(int numLogo,String filename) {
-           InputStream inLogo = ClassLoader.getSystemResourceAsStream(filename);
-           logger.debug("IN logo  input stream {}",inLogo);
-        byte[] buffer = new byte[1024];
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int len = -1;
-        try {
-            while ((len = inLogo.read(buffer)) > -1) {
-             baos.write(buffer,0,len);
-            }
-        } catch (IOException e) {
-          logger.error("errore caricamento logo ");
-        }
 
-        printerCommand.put(0x1D);
-        printerCommand.put(0x23);
-        printerCommand.put(numLogo);
-        printerCommand.put(0x1B);
-        for (byte b : baos.toByteArray()) {
-            printerCommand.put((int)b);
-        }
-
-       }
 
     public void printArray(ArrayList<Integer> toPrint) {
         for (int integer : toPrint) {
